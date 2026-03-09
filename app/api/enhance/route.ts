@@ -1,105 +1,86 @@
+// app/api/enhance/route.ts
+// Next.js App Router API route — proxies image to FastAPI backend
+
 import { NextRequest, NextResponse } from 'next/server'
 
-const API_BASE_URL =
-  process.env.IMAGE_ENHANCE_API_URL ?? 'http://localhost:8000'
+const BACKEND_URL = process.env.API_URL ?? 'http://localhost:8000'
+const MAX_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 
-export async function POST(request: NextRequest) {
+const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
+
+export async function POST(req: NextRequest) {
   try {
-    const formData = await request.formData()
+    // ── 1. Parse incoming multipart form ──────────────────────────────────
+    const formData = await req.formData()
+    const file = formData.get('image') as File | null
+    const scale = formData.get('scale') ?? '2'
+    const faceEnhance = formData.get('face_enhance') ?? 'false'
 
-    const fileEntry = formData.get('image')
-    const scaleEntry = formData.get('scale')
-    const faceEnhanceEntry = formData.get('face_enhance')
+    // ── 2. Validate ────────────────────────────────────────────────────────
+    if (!file) {
+      return NextResponse.json({ error: 'No image provided.' }, { status: 400 })
+    }
 
-    if (!(fileEntry instanceof File)) {
+    if (!ALLOWED_TYPES.has(file.type)) {
       return NextResponse.json(
-        { error: 'No image provided' },
-        { status: 400 }
+        { error: 'Unsupported file type. Please upload a JPEG, PNG, or WebP image.' },
+        { status: 415 }
       )
     }
 
-    const file = fileEntry
-    const scale = typeof scaleEntry === 'string' ? scaleEntry : '2'
-    const faceEnhanceBool =
-      typeof faceEnhanceEntry === 'string'
-        ? faceEnhanceEntry === 'true'
-        : true
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
+    if (file.size > MAX_SIZE_BYTES) {
       return NextResponse.json(
-        { error: 'Invalid file type. Please upload an image.' },
-        { status: 400 }
-      )
-    }
-
-    // Validate file size (10MB max)
-    const MAX_SIZE = 10 * 1024 * 1024
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json(
-        { error: 'File too large. Maximum size is 10MB.' },
+        { error: 'File too large. Maximum size is 10 MB.' },
         { status: 413 }
       )
     }
 
-    const apiFormData = new FormData()
-    apiFormData.append('image', file)
-    apiFormData.append('scale', scale)
-    apiFormData.append('face_enhance', faceEnhanceBool.toString())
+    const scaleNum = Number(scale)
+    if (![2, 4].includes(scaleNum)) {
+      return NextResponse.json({ error: 'Scale must be 2 or 4.' }, { status: 400 })
+    }
 
-    console.log('[v0] Sending request to API:', { url: `${API_BASE_URL}/enhance-image`, fileSize: file.size })
+    // ── 3. Forward to FastAPI backend ──────────────────────────────────────
+    const backendForm = new FormData()
+    backendForm.append('image', file)
+    backendForm.append('scale', String(scaleNum))
+    backendForm.append('face_enhance', faceEnhance === 'true' ? 'true' : 'false')
 
-    const response = await fetch(`${API_BASE_URL}/enhance-image`, {
+    const backendRes = await fetch(`${BACKEND_URL}/enhance-image`, {
       method: 'POST',
-      body: apiFormData,
-      headers: {
-        Accept: 'application/json',
-      },
+      body: backendForm,
+      // No Content-Type header — let fetch set multipart boundary automatically
+      signal: AbortSignal.timeout(120_000), // 2-min timeout
     })
 
-    console.log('[v0] API response status:', response.status)
+    // ── 4. Handle backend errors ───────────────────────────────────────────
+    if (!backendRes.ok) {
+      let detail = 'Backend enhancement failed.'
+      try {
+        const errBody = await backendRes.json()
+        detail = errBody?.detail ?? detail
+      } catch {
+        // backend returned non-JSON
+      }
+      return NextResponse.json({ error: detail }, { status: backendRes.status })
+    }
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      console.log('[v0] API error response:', errorData)
+    // ── 5. Return success ──────────────────────────────────────────────────
+    const data = await backendRes.json()
+    return NextResponse.json(data)
 
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Internal server error.'
+
+    // Timeout
+    if (message.includes('abort') || message.includes('timeout')) {
       return NextResponse.json(
-        {
-          error:
-            errorData.detail ||
-            'Image enhancement failed. Please try again.',
-        },
-        { status: response.status }
+        { error: 'Enhancement timed out. Please try again.' },
+        { status: 504 }
       )
     }
 
-    const result = await response.json()
-    console.log('[v0] API success response:', { url: result.url, processingTime: result.processing_time })
-
-    return NextResponse.json({
-      url: result.url,
-      processing_time: result.processing_time,
-      original_size_kb: result.original_size_kb,
-      scale: result.scale,
-      face_enhance: result.face_enhance,
-    })
-  } catch (error) {
-    console.error('[v0] API Route Error:', error instanceof Error ? error.message : error)
-    
-    if (error instanceof TypeError) {
-      console.error('[v0] Connection error - Backend may not be running at:', API_BASE_URL)
-      return NextResponse.json(
-        {
-          error:
-            'Cannot connect to enhancement service. Please ensure your backend is running at ' + API_BASE_URL,
-        },
-        { status: 503 }
-      )
-    }
-
-    return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
-      { status: 500 }
-    )
+    console.error('[/api/enhance]', err)
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

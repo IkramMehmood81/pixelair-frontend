@@ -1,7 +1,8 @@
+// app/enhance/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Download, RotateCcw, Loader, CheckCircle2, ArrowLeft } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Download, RotateCcw, Loader, CheckCircle2, ArrowLeft, AlertCircle, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/components/header'
@@ -11,56 +12,182 @@ import { EnhancementStats } from '@/components/enhancement-stats'
 import { GradientSection } from '@/components/gradient-section'
 import { CTASection } from '@/components/cta-section'
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+type Stage = 'loading' | 'enhancing' | 'done' | 'error'
+
+interface EnhanceResult {
+  url: string
+  processing_time: number
+  original_size_kb: number
+  scale: number
+  face_enhance: boolean
+}
+
+interface EnhanceSettings {
+  scale: number
+  faceEnhance: boolean
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Convert a base64 data-URI → Blob */
+function dataURLtoBlob(dataURL: string): Blob {
+  const [header, base64] = dataURL.split(',')
+  const mime = header.match(/:(.*?);/)?.[1] ?? 'image/jpeg'
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return new Blob([bytes], { type: mime })
+}
+
+/** Download a URL — works for both blob URLs and remote CDN URLs */
+async function downloadImage(url: string, filename: string) {
+  try {
+    // For remote URLs (Replicate CDN) we must fetch then create a local blob URL
+    const res = await fetch(url)
+    const blob = await res.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(blobUrl)
+  } catch {
+    // Fallback: open in new tab
+    window.open(url, '_blank')
+  }
+}
+
+// ─── Processing steps UI data ─────────────────────────────────────────────────
+const STEPS = [
+  { id: 'upload',   label: 'Image received & validated' },
+  { id: 'sending',  label: 'Sending to Real-ESRGAN AI' },
+  { id: 'enhance',  label: 'Upscaling & enhancing pixels' },
+  { id: 'finish',   label: 'Finalizing output image' },
+]
+
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function EnhancePage() {
-  const [isProcessing, setIsProcessing] = useState(true)
-  const [isEnhanced, setIsEnhanced] = useState(false)
+  const [stage, setStage]                 = useState<Stage>('loading')
   const [originalImage, setOriginalImage] = useState<string>('')
   const [enhancedImage, setEnhancedImage] = useState<string>('')
+  const [result, setResult]               = useState<EnhanceResult | null>(null)
+  const [errorMsg, setErrorMsg]           = useState<string>('')
+  const [settings, setSettings]           = useState<EnhanceSettings>({ scale: 2, faceEnhance: false })
+  const [activeStep, setActiveStep]       = useState<number>(0)
 
+  // ── Animate processing steps while waiting ─────────────────────────────────
   useEffect(() => {
-    const stored = sessionStorage.getItem('originalImage')
-    if (stored) {
-      setOriginalImage(stored)
-      simulateEnhancement(stored)
-    } else {
-      setIsProcessing(false)
+    if (stage !== 'enhancing') return
+    const id = setInterval(() => {
+      setActiveStep(s => Math.min(s + 1, STEPS.length - 1))
+    }, 2200)
+    return () => clearInterval(id)
+  }, [stage])
+
+  // ── Boot: read sessionStorage ──────────────────────────────────────────────
+  useEffect(() => {
+    const stored    = sessionStorage.getItem('originalImage')
+    const scale     = sessionStorage.getItem('enhanceScale')
+    const face      = sessionStorage.getItem('faceEnhance')
+
+    if (!stored) {
+      setStage('error')
+      setErrorMsg('No image found. Please upload one first.')
+      return
+    }
+
+    const parsedSettings: EnhanceSettings = {
+      scale: scale === '4x' ? 4 : 2,
+      faceEnhance: face === 'true',
+    }
+
+    setOriginalImage(stored)
+    setSettings(parsedSettings)
+    runEnhancement(stored, parsedSettings)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Core enhancement function ──────────────────────────────────────────────
+  const runEnhancement = useCallback(async (imageData: string, s: EnhanceSettings) => {
+    setStage('enhancing')
+    setActiveStep(0)
+    setErrorMsg('')
+
+    try {
+      // Convert base64 data-URI → Blob → File
+      const blob = dataURLtoBlob(imageData)
+      const ext  = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'
+      const file = new File([blob], `upload.${ext}`, { type: blob.type })
+
+      // Build multipart FormData
+      const form = new FormData()
+      form.append('image',        file)
+      form.append('scale',        String(s.scale))
+      form.append('face_enhance', String(s.faceEnhance))
+
+      // Call Next.js API route (which proxies to FastAPI)
+      const res = await fetch('/api/enhance', {
+        method: 'POST',
+        body: form,
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data?.error ?? `Server error ${res.status}`)
+      }
+
+      if (!data.url) {
+        throw new Error('No enhanced image URL returned from server.')
+      }
+
+      setResult(data as EnhanceResult)
+      setEnhancedImage(data.url)
+      setActiveStep(STEPS.length - 1)
+      setStage('done')
+
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unexpected error occurred.'
+      setErrorMsg(msg)
+      setStage('error')
     }
   }, [])
 
-  const simulateEnhancement = async (imageData: string) => {
-    await new Promise(resolve => setTimeout(resolve, 2500))
-    setEnhancedImage(imageData)
-    setIsEnhanced(true)
-    setIsProcessing(false)
-  }
-
+  // ── Handlers ───────────────────────────────────────────────────────────────
   const handleDownload = () => {
     if (!enhancedImage) return
-    const link = document.createElement('a')
-    link.href = enhancedImage
-    link.download = `enhanced-image-${Date.now()}.jpg`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const filename = `proenhance-${settings.scale}x-${Date.now()}.png`
+    downloadImage(enhancedImage, filename)
   }
 
   const handleNewEnhance = () => {
     sessionStorage.removeItem('originalImage')
+    sessionStorage.removeItem('enhanceScale')
+    sessionStorage.removeItem('faceEnhance')
     window.location.href = '/'
   }
 
-  if (!originalImage && !isProcessing) {
+  const handleRetry = () => {
+    if (originalImage) runEnhancement(originalImage, settings)
+  }
+
+  // ── No image guard ─────────────────────────────────────────────────────────
+  if (stage === 'error' && !originalImage) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="max-w-md w-full mx-auto px-4 text-center py-20">
-            <h1 className="text-3xl font-bold text-foreground mb-4">No Image to Enhance</h1>
-            <p className="text-muted-foreground mb-8">Please upload an image first.</p>
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-6">
+              <AlertCircle className="w-8 h-8 text-destructive" />
+            </div>
+            <h1 className="text-2xl font-bold text-foreground mb-3">No Image Found</h1>
+            <p className="text-muted-foreground mb-8 text-sm">{errorMsg}</p>
             <Button asChild className="bg-primary hover:bg-primary/90">
               <Link href="/" className="flex items-center justify-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Go Back Home
+                <ArrowLeft className="w-4 h-4" /> Go Back Home
               </Link>
             </Button>
           </div>
@@ -70,86 +197,163 @@ export default function EnhancePage() {
     )
   }
 
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
       <main className="flex-1">
-        {isProcessing ? (
-          // Processing State
-          <GradientSection className="flex items-center justify-center min-h-[70vh]">
+
+        {/* ── ENHANCING STATE ─────────────────────────────────────────────── */}
+        {stage === 'enhancing' && (
+          <GradientSection className="flex items-center justify-center min-h-[75vh]">
             <div className="max-w-md w-full mx-auto px-4 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
-                <Loader className="w-8 h-8 text-primary animate-spin" />
+              {/* Spinner */}
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-8">
+                <div className="absolute inset-0 rounded-full border-4 border-border" />
+                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" />
+                <Zap className="w-8 h-8 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold text-foreground mb-4">Enhancing Your Image</h1>
-              <p className="text-muted-foreground mb-8">
-                Our AI is analyzing and enhancing your photo. This usually takes a few seconds.
+
+              <h1 className="text-2xl font-bold text-foreground mb-2">Enhancing Your Image</h1>
+              <p className="text-muted-foreground text-sm mb-8">
+                Real-ESRGAN {settings.scale}x
+                {settings.faceEnhance ? ' + Face Restore' : ''} — usually under 15 seconds
               </p>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <p>✓ Analyzing image quality</p>
-                <p>✓ Applying enhancement filters</p>
-                <p>⟳ Optimizing colors and clarity</p>
+
+              {/* Animated step list */}
+              <div className="text-left space-y-3 max-w-xs mx-auto">
+                {STEPS.map((step, i) => {
+                  const isDone    = i < activeStep
+                  const isActive  = i === activeStep
+                  return (
+                    <div key={step.id} className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                        {isDone ? (
+                          <CheckCircle2 className="w-5 h-5 text-primary" />
+                        ) : isActive ? (
+                          <Loader className="w-4 h-4 text-primary animate-spin" />
+                        ) : (
+                          <div className="w-4 h-4 rounded-full border-2 border-border" />
+                        )}
+                      </div>
+                      <span className={`text-sm ${isDone || isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        {step.label}
+                      </span>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </GradientSection>
-        ) : isEnhanced && enhancedImage ? (
+        )}
+
+        {/* ── ERROR STATE ─────────────────────────────────────────────────── */}
+        {stage === 'error' && originalImage && (
+          <GradientSection className="flex items-center justify-center min-h-[75vh]">
+            <div className="max-w-md w-full mx-auto px-4 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-6">
+                <AlertCircle className="w-8 h-8 text-destructive" />
+              </div>
+              <h1 className="text-2xl font-bold text-foreground mb-3">Enhancement Failed</h1>
+              <p className="text-muted-foreground mb-2 text-sm leading-relaxed">{errorMsg}</p>
+              <div className="flex gap-3 justify-center mt-6">
+                <Button onClick={handleRetry} className="bg-primary hover:bg-primary/90">
+                  <RotateCcw className="w-4 h-4 mr-2" /> Try Again
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/"><ArrowLeft className="w-4 h-4 mr-1" /> Home</Link>
+                </Button>
+              </div>
+            </div>
+          </GradientSection>
+        )}
+
+        {/* ── DONE STATE ──────────────────────────────────────────────────── */}
+        {stage === 'done' && enhancedImage && (
           <>
             <GradientSection>
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Success Header */}
-                <div className="flex items-center gap-3 mb-8">
-                  <CheckCircle2 className="w-6 h-6 text-primary" />
-                  <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Enhancement Complete</h1>
+                {/* Header */}
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0" />
+                    <div>
+                      <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Enhancement Complete</h1>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        Real-ESRGAN {settings.scale}x
+                        {settings.faceEnhance ? ' + Face Restore' : ''}
+                        {result ? ` · ${result.processing_time}s` : ''}
+                      </p>
+                    </div>
+                  </div>
+                  {/* Quick download CTA in header */}
+                  <Button
+                    onClick={handleDownload}
+                    size="sm"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground hidden sm:flex"
+                  >
+                    <Download className="w-4 h-4 mr-1.5" /> Download
+                  </Button>
                 </div>
 
-                {/* Before / After side by side */}
-                <div className="grid md:grid-cols-2 gap-4 mb-10">
-                  {/* Original */}
+                {/* Before / After thumbnails */}
+                <div className="grid md:grid-cols-2 gap-4 mb-8">
                   <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Original</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                      Original
+                      {result ? ` · ${result.original_size_kb.toFixed(0)} KB` : ''}
+                    </p>
                     <div className="rounded-xl overflow-hidden border border-border bg-card aspect-square">
                       <img
                         src={originalImage}
                         alt="Original"
                         className="w-full h-full object-contain"
+                        draggable={false}
                       />
                     </div>
                   </div>
 
-                  {/* Enhanced */}
                   <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-primary">Enhanced</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+                      Enhanced {settings.scale}x
+                    </p>
                     <div className="rounded-xl overflow-hidden border border-primary/40 bg-card aspect-square relative">
                       <img
                         src={enhancedImage}
                         alt="Enhanced"
                         className="w-full h-full object-contain"
+                        draggable={false}
+                        crossOrigin="anonymous"
                       />
-                      {/* "Enhanced" badge */}
-                      <span className="absolute top-2 right-2 text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full font-medium">
+                      <span className="absolute top-2 right-2 text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full font-medium pointer-events-none">
                         AI Enhanced
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Drag-to-compare strip */}
-                <div className="mb-10">
-                  <p className="text-sm text-muted-foreground mb-3">Drag to compare</p>
-                  <div className="rounded-xl overflow-hidden border border-border" style={{ maxHeight: '420px' }}>
+                {/* Drag-to-compare slider */}
+                <div className="mb-8">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    ← Drag to compare before / after →
+                  </p>
+                  <div
+                    className="rounded-xl overflow-hidden border border-border"
+                    style={{ maxHeight: '420px' }}
+                  >
                     <ComparisonSlider
                       beforeImage={originalImage}
                       afterImage={enhancedImage}
                       beforeLabel="Original"
-                      afterLabel="Enhanced"
+                      afterLabel={`Enhanced ${settings.scale}x`}
                     />
                   </div>
                 </div>
 
-                {/* Stats */}
-                <div className="mb-10">
+                {/* Enhancement stats */}
+                <div className="mb-8">
                   <h2 className="text-lg font-semibold text-foreground mb-4">Enhancement Applied</h2>
                   <EnhancementStats
                     clarity={85}
@@ -159,7 +363,7 @@ export default function EnhancePage() {
                   />
                 </div>
 
-                {/* Actions */}
+                {/* Action buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
                     onClick={handleDownload}
@@ -190,23 +394,8 @@ export default function EnhancePage() {
               secondaryCTA={{ text: 'Share on Social', href: '#' }}
             />
           </>
-        ) : (
-          // Error State
-          <GradientSection className="flex items-center justify-center min-h-[70vh]">
-            <div className="max-w-md w-full mx-auto px-4 text-center">
-              <h1 className="text-3xl font-bold text-foreground mb-4">Enhancement Failed</h1>
-              <p className="text-muted-foreground mb-8">
-                Something went wrong while processing your image. Please try again.
-              </p>
-              <Button asChild className="bg-primary hover:bg-primary/90">
-                <Link href="/" className="flex items-center justify-center gap-2">
-                  <ArrowLeft className="w-4 h-4" />
-                  Try Again
-                </Link>
-              </Button>
-            </div>
-          </GradientSection>
         )}
+
       </main>
 
       <Footer />
