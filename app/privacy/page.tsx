@@ -16,7 +16,7 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">1. Introduction</h2>
               <p className="text-muted-foreground leading-relaxed">
-                ProEnhance ("we," "us," or "our") operates the image enhancement service at proenhance.app. This Privacy Policy explains our practices regarding data collection and protection.
+                PhotoGenerator.ai ("we," "us," or "our") operates the image enhancement service at photogenerator.ai. This Privacy Policy explains our practices regarding data collection and protection.
               </p>
             </div>
 
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Images You Upload</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Images uploaded to ProEnhance are processed by our AI enhancement service. We do not store personal information or images longer than necessary for processing.
+                    Images uploaded to PhotoGenerator.ai are processed by our AI enhancement service. We do not store personal information or images longer than necessary for processing.
                   </p>
                 </div>
                 <div>
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">6. Cookies & Tracking</h2>
               <p className="text-muted-foreground leading-relaxed">
-                ProEnhance uses minimal cookies only for essential functionality and analytics. We do not use cookies for advertising or tracking purposes. You can disable cookies in your browser settings.
+                PhotoGenerator.ai uses minimal cookies only for essential functionality and analytics. We do not use cookies for advertising or tracking purposes. You can disable cookies in your browser settings.
               </p>
             </div>
 
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">9. Children's Privacy</h2>
               <p className="text-muted-foreground leading-relaxed">
-                ProEnhance is not intended for children under 13. We do not knowingly collect personal information from children. If we become aware of such collection, we will take steps to delete such information.
+                PhotoGenerator.ai is not intended for children under 13. We do not knowingly collect personal information from children. If we become aware of such collection, we will take steps to delete such information.
               </p>
             </div>
 
@@ -111,21 +111,21 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">11. Changes to This Policy</h2>
               <p className="text-muted-foreground leading-relaxed">
-                We may update this Privacy Policy periodically. We will notify you of material changes by updating the "Last updated" date. Continued use of ProEnhance after changes constitutes acceptance.
+                We may update this Privacy Policy periodically. We will notify you of material changes by updating the "Last updated" date. Continued use of PhotoGenerator.ai after changes constitutes acceptance.
               </p>
             </div>
 
             <div>
               <h2 className="text-2xl font-bold mb-4">12. Contact Us</h2>
               <p className="text-muted-foreground leading-relaxed">
-                If you have questions about this Privacy Policy or our privacy practices, please contact us at <Link href="mailto:privacy@proenhance.app" className="text-primary hover:underline">privacy@proenhance.app</Link>
+                If you have questions about this Privacy Policy or our privacy practices, please contact us at <Link href="mailto:privacy@photogenerator.ai" className="text-primary hover:underline">privacy@photogenerator.ai</Link>
               </p>
             </div>
 
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 mt-8">
               <h3 className="font-semibold text-foreground mb-2">GDPR & Privacy Laws</h3>
               <p className="text-sm text-muted-foreground">
-                ProEnhance complies with GDPR, CCPA, and other privacy regulations. We do not sell your data. Your privacy is our priority.
+                PhotoGenerator.ai complies with GDPR, CCPA, and other privacy regulations. We do not sell your data. Your privacy is our priority.
               </p>
             </div>
           </section>

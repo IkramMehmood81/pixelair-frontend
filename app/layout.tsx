@@ -1,18 +1,11 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-mono' });
-const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-playfair', weight: ['400', '500', '600', '700', '800', '900'] });
-
 export const metadata: Metadata = {
-  title: 'ProEnhance - AI Image Enhancer | Enhance Your Photos for Free',
-  description: 'Free AI-powered image enhancer. Improve your photos with one click. Enhance clarity, reduce noise, improve colors, and upscale images. No signup required.',
-  generator: 'v0.app',
-  keywords: 'image enhancer, photo enhancer, AI image, online image editor, photo improvement',
+  title: 'PhotoGenerator.ai — AI-Powered Image Enhancement',
+  description: 'AI powered image enhancement. Upscale, sharpen and restore your photos instantly. No sign-up required. Completely free. Your privacy is guaranteed.',
+  keywords: 'image enhancer, photo enhancer, AI image, upscale image, photo improvement, image restoration',
   icons: {
     icon: [
       {
@@ -31,9 +24,15 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   openGraph: {
-    title: 'ProEnhance - AI Image Enhancer',
-    description: 'Free AI-powered image enhancer. Improve your photos with one click.',
+    title: 'PhotoGenerator.ai — AI-Powered Image Enhancement',
+    description: 'AI powered image enhancement. Upscale and restore your photos instantly. No sign-up required.',
     type: 'website',
+    siteName: 'PhotoGenerator.ai',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PhotoGenerator.ai — AI-Powered Image Enhancement',
+    description: 'AI powered image enhancement. Upscale and restore your photos instantly.',
   },
 }
 
@@ -43,7 +42,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`dark ${geist.variable} ${geistMono.variable} ${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className="dark">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Inter:wght@100..900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="font-sans antialiased bg-background text-foreground">
         {children}
         <Analytics />

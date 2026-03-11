@@ -3,7 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 
-const BACKEND_URL = process.env.API_URL ?? 'http://localhost:8000'
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? 'http://localhost:8000'
 const MAX_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     // ── 4. Handle backend errors ───────────────────────────────────────────
     if (!backendRes.ok) {
-      let detail = 'Backend enhancement failed.'
+      let detail = 'Enhancement failed. Please try again.'
       try {
         const errBody = await backendRes.json()
         detail = errBody?.detail ?? detail
@@ -73,14 +74,22 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : 'Internal server error.'
 
     // Timeout
-    if (message.includes('abort') || message.includes('timeout')) {
+    if (message.includes('abort') || message.includes('timeout') || message.includes('TimeoutError')) {
       return NextResponse.json(
         { error: 'Enhancement timed out. Please try again.' },
         { status: 504 }
       )
     }
 
+    // Network failure
+    if (message.includes('fetch') || message.includes('ECONNREFUSED') || message.includes('network')) {
+      return NextResponse.json(
+        { error: 'Enhancement failed. Please try again.' },
+        { status: 503 }
+      )
+    }
+
     console.error('[/api/enhance]', err)
-    return NextResponse.json({ error: message }, { status: 500 })
+    return NextResponse.json({ error: 'Enhancement failed. Please try again.' }, { status: 500 })
   }
 }

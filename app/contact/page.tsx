@@ -50,7 +50,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Have a question or feedback about ProEnhance? We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible.
+            Have a question or feedback about PhotoGenerator.ai? We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible.
           </p>
         </div>
 
@@ -65,10 +65,10 @@ export default function ContactPage() {
               Reach us directly via email for inquiries and support.
             </p>
             <a
-              href="mailto:support@proenhance.app"
+              href="mailto:support@photogenerator.ai"
               className="text-primary font-medium hover:underline text-sm"
             >
-              support@proenhance.app
+              support@photogenerator.ai
             </a>
           </div>
 
@@ -204,10 +204,10 @@ export default function ContactPage() {
             <div className="mt-8 p-6 rounded-lg bg-primary/5 border border-primary/20">
               <h3 className="font-semibold text-foreground mb-3">Other Ways to Reach Us</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• <strong>Bug Reports:</strong> bugs@proenhance.app</li>
-                <li>• <strong>Feature Requests:</strong> features@proenhance.app</li>
-                <li>• <strong>Privacy Concerns:</strong> privacy@proenhance.app</li>
-                <li>• <strong>Business Inquiries:</strong> business@proenhance.app</li>
+                <li>• <strong>Bug Reports:</strong> support@photogenerator.ai</li>
+                <li>• <strong>Feature Requests:</strong> support@photogenerator.ai</li>
+                <li>• <strong>Privacy Concerns:</strong> support@photogenerator.ai</li>
+                <li>• <strong>Business Inquiries:</strong> support@photogenerator.ai</li>
               </ul>
             </div>
           </div>
