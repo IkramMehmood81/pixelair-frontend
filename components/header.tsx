@@ -15,14 +15,14 @@ export function Header() {
               <img
                 src="/logo-small.png"
                 alt="PhotoGenerator.ai logo"
-                className="h-8 sm:h-9 lg:h-10 w-auto object-contain"
+                className="h-8 sm:h-9 lg:h-14 w-auto object-contain"
                 style={{ imageRendering: 'auto' }}
               />
             </picture>
           </Link>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2 flex-1 justify-centre" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2 flex-1 justify-center" aria-label="Main navigation">
             <Link
               href="/#features"
               className="px-3 lg:px-4 py-2 text-xs sm:text-sm font-semibold text-foreground/80 hover:text-primary bg-transparent hover:bg-primary/15 rounded-lg transition-all duration-300 relative group whitespace-nowrap"

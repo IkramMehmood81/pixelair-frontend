@@ -192,15 +192,15 @@ export default function EnhancePage() {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <main className="flex-1 flex items-centre justify-centre">
-          <div className="max-w-md w-full mx-auto px-4 text-centre py-20">
-            <div className="inline-flex items-centre justify-centre w-16 h-16 rounded-full bg-destructive/10 mb-6">
+        <main className="flex-1 flex items-center justify-center">
+          <div className="max-w-md w-full mx-auto px-4 text-center py-20">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-6">
               <AlertCircle className="w-8 h-8 text-destructive" />
             </div>
             <h1 className="text-2xl font-bold text-foreground mb-3">No Image Found</h1>
             <p className="text-muted-foreground mb-8 text-sm">{errorMsg}</p>
             <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link href="/" className="flex items-centre justify-centre gap-2" aria-label="Return to home page">
+              <Link href="/" className="flex items-center justify-center gap-2" aria-label="Return to home page">
                 <ArrowLeft className="w-4 h-4" /> Go Back Home
               </Link>
             </Button>
@@ -220,13 +220,22 @@ export default function EnhancePage() {
 
         {/* ── ENHANCING STATE ─────────────────────────────────────────────── */}
         {stage === 'enhancing' && (
-          <GradientSection className="flex items-centre justify-centre min-h-[75vh]">
-            <div className="max-w-md w-full mx-auto px-4 text-centre">
+          <GradientSection className="flex items-center justify-center min-h-[75vh]">
+            <div className="max-w-md w-full mx-auto px-4 text-center">
               {/* Spinner */}
-              <div className="relative inline-flex items-centre justify-centre w-20 h-20 mb-8" role="status" aria-label="Enhancing image">
-                <div className="absolute inset-0 rounded-full border-4 border-border" />
+               <div className="relative w-20 h-20 mb-8" role="status" aria-label="Enhancing image">
+  
+                {/* Static ring */}
+                  <div className="absolute inset-0 rounded-full border-4 border-border" />
+
+                 {/* Spinning ring */}
                 <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" />
-                <Zap className="w-8 h-8 text-primary" />
+
+                {/* Centered icon */}
+                 <div className="absolute inset-0 flex items-center justify-center">
+                 <Zap className="w-8 h-8 text-primary" />
+                 </div>
+
               </div>
 
               <h1 className="text-2xl font-bold text-foreground mb-2">Enhancing Your Image</h1>
@@ -241,8 +250,8 @@ export default function EnhancePage() {
                   const isDone   = i < activeStep
                   const isActive = i === activeStep
                   return (
-                    <div key={step.id} className="flex items-centre gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 flex items-centre justify-centre">
+                    <div key={step.id} className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
                         {isDone ? (
                           <CheckCircle2 className="w-5 h-5 text-primary" />
                         ) : isActive ? (
@@ -265,9 +274,9 @@ export default function EnhancePage() {
 
         {/* ── ERROR STATE ─────────────────────────────────────────────────── */}
         {stage === 'error' && originalImage && (
-          <GradientSection className="flex items-centre justify-centre min-h-[75vh]">
-            <div className="max-w-md w-full mx-auto px-4 text-centre">
-              <div className="inline-flex items-centre justify-centre w-16 h-16 rounded-full bg-destructive/10 mb-6">
+          <GradientSection className="flex items-center justify-center min-h-[75vh]">
+            <div className="max-w-md w-full mx-auto px-4 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-6">
                 <AlertCircle className="w-8 h-8 text-destructive" />
               </div>
               <h1 className="text-2xl font-bold text-foreground mb-3">Enhancement Failed</h1>
@@ -278,7 +287,7 @@ export default function EnhancePage() {
                   support@photogenerator.ai
                 </a>
               </p>
-              <div className="flex gap-3 justify-centre mt-2">
+              <div className="flex gap-3 justify-center mt-2">
                 <Button onClick={handleRetry} className="bg-primary hover:bg-primary/90" aria-label="Retry enhancement">
                   <RotateCcw className="w-4 h-4 mr-2" /> Try Again
                 </Button>
@@ -298,7 +307,7 @@ export default function EnhancePage() {
 
                 {/* Header */}
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
-                  <div className="flex items-centre gap-3">
+                  <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0" />
                     <div>
                       <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Enhancement Complete</h1>

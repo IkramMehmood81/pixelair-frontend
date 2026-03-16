@@ -22,7 +22,7 @@ export function Footer() {
                 <img
                   src="/logo-small.png"
                   alt="PhotoGenerator.ai logo"
-                  className="h-8 w-auto object-contain"
+                  className="h-8 sm:h-9 lg:h-14 w-auto object-contain"
                   loading="lazy"
                 />
               </picture>
@@ -90,7 +90,7 @@ export function Footer() {
 
         <Separator className="my-12 bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
 
-        <div className="flex flex-col sm:flex-row items-centre justify-between gap-4 text-xs sm:text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-muted-foreground">
           <p className="tracking-tight font-light">&copy; {currentYear} PhotoGenerator.ai. All rights reserved.</p>
           <p className="tracking-tight font-light">Designed for creators. Built with precision.</p>
         </div>
