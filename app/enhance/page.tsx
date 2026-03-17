@@ -13,6 +13,7 @@ import { GradientSection } from '@/components/gradient-section'
 import { CTASection } from '@/components/cta-section'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
 type Stage = 'loading' | 'enhancing' | 'done' | 'error'
 
 interface EnhanceResult {
@@ -59,36 +60,39 @@ async function downloadImage(url: string, filename: string) {
 }
 
 // ─── Processing steps UI data ─────────────────────────────────────────────────
+
 const STEPS = [
-  { id: 'upload',   label: 'Image received &amp; validated' },
-  { id: 'sending',  label: 'Sending to Real-ESRGAN AI' },
-  { id: 'enhance',  label: 'Upscaling &amp; enhancing pixels' },
-  { id: 'finish',   label: 'Finalising output image' },
+  { id: 'upload',  label: 'Image received &amp; validated' },
+  { id: 'sending', label: 'Sending to Real-ESRGAN AI' },
+  { id: 'enhance', label: 'Upscaling &amp; enhancing pixels' },
+  { id: 'finish',  label: 'Finalising output image' },
 ]
 
 // ─── User-friendly error messages ─────────────────────────────────────────────
+
 function friendlyError(raw: string): string {
   if (!raw) return 'Enhancement failed. Please try again.'
   const lower = raw.toLowerCase()
-  if (lower.includes('timeout') || lower.includes('timed out')) return 'Enhancement timed out. Please try again with a smaller image.'
+  if (lower.includes('timeout') || lower.includes('timed out'))      return 'Enhancement timed out. Please try again with a smaller image.'
   if (lower.includes('network') || lower.includes('fetch') || lower.includes('econnrefused')) return 'Network error. Please check your connection and try again.'
-  if (lower.includes('too large') || lower.includes('413')) return 'Image is too large. Please use an image under 10MB.'
-  if (lower.includes('unsupported') || lower.includes('415')) return 'Unsupported image format. Please use JPEG, PNG, or WebP.'
-  if (lower.includes('enhancement failed')) return 'Enhancement failed. Please try again.'
+  if (lower.includes('too large') || lower.includes('413'))          return 'Image is too large. Please use an image under 10MB.'
+  if (lower.includes('unsupported') || lower.includes('415'))        return 'Unsupported image format. Please use JPEG, PNG, or WebP.'
+  if (lower.includes('enhancement failed'))                          return 'Enhancement failed. Please try again.'
   return 'Enhancement failed. Please try again.'
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
+
 export default function EnhancePage() {
-  const [stage, setStage]                 = useState<Stage>('loading')
+  const [stage,         setStage]         = useState<Stage>('loading')
   const [originalImage, setOriginalImage] = useState<string>('')
   const [enhancedImage, setEnhancedImage] = useState<string>('')
-  const [result, setResult]               = useState<EnhanceResult | null>(null)
-  const [errorMsg, setErrorMsg]           = useState<string>('')
-  const [settings, setSettings]           = useState<EnhanceSettings>({ scale: 2, faceEnhance: false })
-  const [activeStep, setActiveStep]       = useState<number>(0)
+  const [result,        setResult]        = useState<EnhanceResult | null>(null)
+  const [errorMsg,      setErrorMsg]      = useState<string>('')
+  const [settings,      setSettings]      = useState<EnhanceSettings>({ scale: 2, faceEnhance: false })
+  const [activeStep,    setActiveStep]    = useState<number>(0)
 
-  // ── Animate processing steps while waiting ─────────────────────────────────
+  // ── Animate processing steps ─────────────────────────────────────────────
   useEffect(() => {
     if (stage !== 'enhancing') return
     const id = setInterval(() => {
@@ -97,7 +101,7 @@ export default function EnhancePage() {
     return () => clearInterval(id)
   }, [stage])
 
-  // ── Boot: read sessionStorage ──────────────────────────────────────────────
+  // ── Boot: read sessionStorage, then kick off enhancement ─────────────────
   useEffect(() => {
     const stored = sessionStorage.getItem('originalImage')
     const scale  = sessionStorage.getItem('enhanceScale')
@@ -110,7 +114,7 @@ export default function EnhancePage() {
     }
 
     const parsedSettings: EnhanceSettings = {
-      scale: scale === '4x' ? 4 : 2,
+      scale:       scale === '4x' ? 4 : 2,
       faceEnhance: face === 'true',
     }
 
@@ -119,29 +123,26 @@ export default function EnhancePage() {
     runEnhancement(stored, parsedSettings)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Core enhancement function ──────────────────────────────────────────────
+  // ── Core enhancement function ─────────────────────────────────────────────
   const runEnhancement = useCallback(async (imageData: string, s: EnhanceSettings) => {
     setStage('enhancing')
     setActiveStep(0)
     setErrorMsg('')
 
     try {
-      // Convert base64 data-URI → Blob → File
+      // Convert base64 data-URI → Blob → File and POST as multipart FormData.
+      // The image was already compressed by page.tsx (1024 px / JPEG 0.7) so
+      // the payload is small and well within the 10 MB API limit.
       const blob = dataURLtoBlob(imageData)
       const ext  = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'
       const file = new File([blob], `upload.${ext}`, { type: blob.type })
 
-      // Build multipart FormData
       const form = new FormData()
       form.append('image',        file)
       form.append('scale',        String(s.scale))
       form.append('face_enhance', String(s.faceEnhance))
 
-      // Call Next.js API route (which proxies to the backend)
-      const res = await fetch('/api/enhance', {
-        method: 'POST',
-        body: form,
-      })
+      const res = await fetch('/api/enhance', { method: 'POST', body: form })
 
       let data: Record<string, unknown> = {}
       try {
@@ -153,7 +154,6 @@ export default function EnhancePage() {
       if (!res.ok) {
         throw new Error((data?.error as string) ?? `Server error ${res.status}`)
       }
-
       if (!data.url) {
         throw new Error('Enhancement failed. Please try again.')
       }
@@ -162,6 +162,7 @@ export default function EnhancePage() {
       setEnhancedImage(data.url as string)
       setActiveStep(STEPS.length - 1)
       setStage('done')
+
     } catch (err: unknown) {
       const raw = err instanceof Error ? err.message : 'Unexpected error occurred.'
       setErrorMsg(friendlyError(raw))
@@ -169,14 +170,15 @@ export default function EnhancePage() {
     }
   }, [])
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
+  // ── Handlers ─────────────────────────────────────────────────────────────
+
   const handleDownload = () => {
     if (!enhancedImage) return
-    const filename = `photogenerator-${settings.scale}x-${Date.now()}.png`
-    downloadImage(enhancedImage, filename)
+    downloadImage(enhancedImage, `photogenerator-${settings.scale}x-${Date.now()}.png`)
   }
 
   const handleNewEnhance = () => {
+    // Clean up all sessionStorage keys before navigating away.
     sessionStorage.removeItem('originalImage')
     sessionStorage.removeItem('enhanceScale')
     sessionStorage.removeItem('faceEnhance')
@@ -187,7 +189,8 @@ export default function EnhancePage() {
     if (originalImage) runEnhancement(originalImage, settings)
   }
 
-  // ── No image guard ─────────────────────────────────────────────────────────
+  // ── No-image guard ────────────────────────────────────────────────────────
+
   if (stage === 'error' && !originalImage) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
@@ -211,31 +214,24 @@ export default function EnhancePage() {
     )
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
       <main className="flex-1">
 
-        {/* ── ENHANCING STATE ─────────────────────────────────────────────── */}
+        {/* ── ENHANCING ──────────────────────────────────────────────────── */}
         {stage === 'enhancing' && (
           <GradientSection className="flex items-center justify-center min-h-[75vh]">
             <div className="max-w-md w-full mx-auto px-4 text-center">
-              {/* Spinner */}
-               <div className="relative w-20 h-20 mb-8" role="status" aria-label="Enhancing image">
-  
-                {/* Static ring */}
-                  <div className="absolute inset-0 rounded-full border-4 border-border" />
-
-                 {/* Spinning ring */}
+              <div className="relative w-20 h-20 mb-8" role="status" aria-label="Enhancing image">
+                <div className="absolute inset-0 rounded-full border-4 border-border" />
                 <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" />
-
-                {/* Centered icon */}
-                 <div className="absolute inset-0 flex items-center justify-center">
-                 <Zap className="w-8 h-8 text-primary" />
-                 </div>
-
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Zap className="w-8 h-8 text-primary" />
+                </div>
               </div>
 
               <h1 className="text-2xl font-bold text-foreground mb-2">Enhancing Your Image</h1>
@@ -244,7 +240,6 @@ export default function EnhancePage() {
                 {settings.faceEnhance ? ' + Face Restore' : ''} — usually under 15 seconds
               </p>
 
-              {/* Animated step list */}
               <div className="text-left space-y-3 max-w-xs mx-auto">
                 {STEPS.map((step, i) => {
                   const isDone   = i < activeStep
@@ -252,13 +247,9 @@ export default function EnhancePage() {
                   return (
                     <div key={step.id} className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                        {isDone ? (
-                          <CheckCircle2 className="w-5 h-5 text-primary" />
-                        ) : isActive ? (
-                          <Loader className="w-4 h-4 text-primary animate-spin" />
-                        ) : (
-                          <div className="w-4 h-4 rounded-full border-2 border-border" />
-                        )}
+                        {isDone   ? <CheckCircle2 className="w-5 h-5 text-primary" />
+                        : isActive ? <Loader className="w-4 h-4 text-primary animate-spin" />
+                        :            <div className="w-4 h-4 rounded-full border-2 border-border" />}
                       </div>
                       <span
                         className={`text-sm ${isDone || isActive ? 'text-foreground' : 'text-muted-foreground'}`}
@@ -272,7 +263,7 @@ export default function EnhancePage() {
           </GradientSection>
         )}
 
-        {/* ── ERROR STATE ─────────────────────────────────────────────────── */}
+        {/* ── ERROR ──────────────────────────────────────────────────────── */}
         {stage === 'error' && originalImage && (
           <GradientSection className="flex items-center justify-center min-h-[75vh]">
             <div className="max-w-md w-full mx-auto px-4 text-center">
@@ -292,20 +283,22 @@ export default function EnhancePage() {
                   <RotateCcw className="w-4 h-4 mr-2" /> Try Again
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href="/" aria-label="Return to home page"><ArrowLeft className="w-4 h-4 mr-1" /> Home</Link>
+                  <Link href="/" aria-label="Return to home page">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Home
+                  </Link>
                 </Button>
               </div>
             </div>
           </GradientSection>
         )}
 
-        {/* ── DONE STATE ──────────────────────────────────────────────────── */}
+        {/* ── DONE ───────────────────────────────────────────────────────── */}
         {stage === 'done' && enhancedImage && (
           <>
             <GradientSection>
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Header */}
+                {/* Header row */}
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0" />
@@ -332,8 +325,7 @@ export default function EnhancePage() {
                 <div className="grid md:grid-cols-2 gap-4 mb-8">
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                      Original
-                      {result ? ` · ${result.original_size_kb.toFixed(0)} KB` : ''}
+                      Original{result ? ` · ${result.original_size_kb.toFixed(0)} KB` : ''}
                     </p>
                     <div className="rounded-xl overflow-hidden border border-border bg-card">
                       <img
@@ -345,7 +337,6 @@ export default function EnhancePage() {
                       />
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-widest text-primary">
                       Enhanced {settings.scale}x
@@ -368,9 +359,7 @@ export default function EnhancePage() {
 
                 {/* Drag-to-compare slider */}
                 <div className="mb-8">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    ← Drag to compare before / after →
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-3">← Drag to compare before / after →</p>
                   <div className="rounded-xl overflow-hidden border border-border max-h-[420px]">
                     <ComparisonSlider
                       beforeImage={originalImage}
@@ -384,12 +373,7 @@ export default function EnhancePage() {
                 {/* Enhancement stats */}
                 <div className="mb-8">
                   <h2 className="text-lg font-semibold text-foreground mb-4">Enhancement Applied</h2>
-                  <EnhancementStats
-                    clarity={85}
-                    colourGrade={92}
-                    noiseReduction={78}
-                    sharpness={88}
-                  />
+                  <EnhancementStats clarity={85} colourGrade={92} noiseReduction={78} sharpness={88} />
                 </div>
 
                 {/* Action buttons */}
@@ -422,7 +406,7 @@ export default function EnhancePage() {
               title="Satisfied with Your Results?"
               description="Share your enhanced photos or enhance more images. Your photos deserve the best."
               primaryCTA={{ text: 'Enhance More Photos', href: '/' }}
-              secondaryCTA={{ text: 'Share on Social', href: '#' }}
+              secondaryCTA={{ text: 'Share on Social',   href: '#' }}
             />
           </>
         )}
