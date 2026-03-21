@@ -19,7 +19,7 @@
  *  • Enhanced image  = Replicate CDN URL (hosted by Replicate, not us)
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, Suspense } from 'react'
 import {
   Zap, Shield, Wand2, Download, ArrowRight,
   CheckCircle2, Loader, AlertCircle, RotateCcw,
@@ -135,7 +135,7 @@ async function downloadImage(url: string, filename: string) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function HomePage() {
+function HomePageInner() {
   const { toast } = useToast()
   const searchParams = useSearchParams()
 
@@ -689,5 +689,13 @@ export default function HomePage() {
       </main>
       <Footer />
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomePageInner />
+    </Suspense>
   )
 }
