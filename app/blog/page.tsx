@@ -14,8 +14,8 @@ import { Footer } from "@/components/footer";
 import { GradientSection } from "@/components/gradient-section";
 import { fetchBlogs, formatDate, estimateReadTime, type BlogSummary } from "@/lib/blog-api";
 
-// ── Next.js ISR — revalidate every 5 minutes ──────────────────────────────────
-export const revalidate = 300;
+// ── Next.js ISR — revalidate every 60 seconds ─────────────────────────────────
+export const revalidate = 60;
 
 // ── Static SEO metadata ────────────────────────────────────────────────────────
 export const metadata: Metadata = {
@@ -144,7 +144,7 @@ export default async function BlogListPage() {
   let error: string | null = null;
 
   try {
-    const data = await fetchBlogs(revalidate);
+    const data = await fetchBlogs(60);
     blogs = data.blogs;
   } catch (err) {
     error =

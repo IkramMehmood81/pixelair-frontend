@@ -22,16 +22,15 @@ import {
   type BlogDetail,
 } from "@/lib/blog-api";
 
-export const revalidate = 300;
+export const revalidate = 60;
+export const dynamicParams = true; // render new posts on-demand, then cache
 
-// ── Static params for ISR pre-rendering ───────────────────────────────────────
+// ── Dynamic — render on first request, cache for 60s ─────────────────────────
+// Returns empty so no slugs are pre-built at deploy time.
+// New posts from GHL appear on the FIRST request (no deploy needed).
+// dynamicParams=true above ensures unknown slugs render on-demand.
 export async function generateStaticParams() {
-  try {
-    const { blogs } = await fetchBlogs(revalidate);
-    return blogs.map((b) => ({ slug: b.slug }));
-  } catch {
-    return [];
-  }
+  return []; // intentionally empty — all posts render on-demand
 }
 
 // ── Dynamic per-post SEO metadata ─────────────────────────────────────────────
@@ -42,7 +41,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const blog = await fetchBlogBySlug(slug, revalidate);
+    const blog = await fetchBlogBySlug(slug, 60);
     const title = blog.metaTitle || blog.title;
     const description =
       blog.metaDescription || blog.excerpt || "Read this article on PhotoGenerator.ai";
@@ -114,7 +113,7 @@ export default async function BlogPostPage({
   let blog: BlogDetail;
 
   try {
-    blog = await fetchBlogBySlug(slug, revalidate);
+    blog = await fetchBlogBySlug(slug, 60);
   } catch (err) {
     const msg = err instanceof Error ? err.message : "";
     if (msg.includes("not found") || msg.includes("not yet published")) {

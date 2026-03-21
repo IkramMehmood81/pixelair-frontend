@@ -71,7 +71,7 @@ export default function ContactPage() {
       <Header />
 
       <main className="flex-1">
-        <GradientSection className="pt-20 sm:pt-28">
+        <GradientSection className="pt-16 sm:pt-20 pb-16 sm:pb-24">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {/* Page heading */}

@@ -8,7 +8,7 @@ export function GradientSection({ children, className = '', id }: GradientSectio
   return (
     <section 
       id={id}
-      className={`relative py-20 sm:py-24 lg:py-28 overflow-hidden ${className}`}
+      className={`relative overflow-hidden ${className}`}
     >
       {/* Vibrant Purple Gradient Layers */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/15 via-background to-accent/12 pointer-events-none" />

@@ -76,7 +76,7 @@ async function apiFetch<T>(
  * shows "No posts yet" instead of crashing.
  * `revalidate` drives Next.js ISR (default 5 min).
  */
-export async function fetchBlogs(revalidate = 300): Promise<BlogListResponse> {
+export async function fetchBlogs(revalidate = 60): Promise<BlogListResponse> {
   try {
     return await apiFetch<BlogListResponse>("/blogs", {
       next: { revalidate },
@@ -94,7 +94,7 @@ export async function fetchBlogs(revalidate = 300): Promise<BlogListResponse> {
  */
 export async function fetchBlogBySlug(
   slug: string,
-  revalidate = 300,
+  revalidate = 60,
 ): Promise<BlogDetail> {
   return apiFetch<BlogDetail>(`/blogs/${encodeURIComponent(slug)}`, {
     next: { revalidate },
