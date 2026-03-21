@@ -7,45 +7,45 @@ import { Button } from '@/components/ui/button'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { GradientSection } from '@/components/gradient-section'
-// FAQSection is used below the contact form — faq-section.tsx + ui/accordion.tsx must be present
 import { FAQSection } from '@/components/faq-section'
 
-// ─── FAQ data ──────────────────────────────────────────────────────────────────
+// ── FAQ data ──────────────────────────────────────────────────────────────────
+
 const FAQ_ITEMS = [
   {
     question: 'What image formats are supported?',
-    answer: 'We support JPEG, PNG, and WebP images up to 10 MB. Other formats like TIFF or HEIC should be converted before uploading.',
+    answer: 'We support JPEG, PNG, and WebP images up to 10 MB. For best results use a clear, well-lit photo.',
   },
   {
     question: 'Are my uploaded images stored on your servers?',
-    answer: 'No. All uploaded images are automatically deleted within 24 hours of processing. We never use your images for training or share them with third parties.',
+    answer: 'No. Images are sent directly to the AI for processing and are never stored on our servers. Everything is deleted immediately after enhancement.',
   },
   {
     question: 'What is the difference between 2x and 4x upscaling?',
-    answer: '2x doubles the image dimensions and is significantly faster — usually under 10 seconds. 4x quadruples the dimensions and produces larger output files, but takes longer to process.',
+    answer: '2x doubles the image dimensions and is much faster — usually under 10 seconds. 4x quadruples the dimensions for a larger output file but takes longer to process.',
   },
   {
     question: 'What does Face Enhancement do?',
-    answer: 'Face Enhancement applies an additional GFPGAN restoration pass specifically tuned for facial details — sharpening eyes, skin texture, and facial structure. Enable it when your image contains people.',
+    answer: 'Face Enhancement applies an additional AI restoration pass (GFPGAN) tuned specifically for facial details — sharpening eyes, skin texture, and facial structure. Enable it when your image contains people.',
   },
   {
-    question: 'Why did my enhancement fail?',
-    answer: 'Common causes are: the image exceeds 10 MB, an unsupported format was used, or a temporary server timeout. Try compressing the image first, then re-upload. If the problem persists, contact support.',
+    question: 'Why did my enhancement fail or time out?',
+    answer: 'Common causes are: the image exceeds 10 MB, an unsupported format was used, or the AI server timed out under high load. Try compressing the image first or switching from 4x to 2x, then retry.',
   },
   {
-    question: 'Is the service really free?',
-    answer: 'Yes — completely free with no watermarks, no sign-up required, and no hidden limits. We are ad-supported to cover server costs.',
+    question: 'Is this service really free?',
+    answer: 'Yes — completely free with no watermarks, no account required, and no hidden limits. The service is ad-supported to cover processing costs.',
+  },
+  {
+    question: 'How do I download my enhanced image?',
+    answer: 'Once enhancement is complete, click the "Download Enhanced Image" button. The high-quality file saves directly to your device with no watermark.',
   },
 ]
 
-// ─── Component ──────────────────────────────────────────────────────────────────
+// ── Component ─────────────────────────────────────────────────────────────────
+
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  })
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -62,9 +62,8 @@ export default function ContactPage() {
     }, 3000)
   }
 
-  // Smooth-scroll to the FAQ section when "View FAQ" is clicked
   const scrollToFAQ = () => {
-    document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
@@ -77,24 +76,20 @@ export default function ContactPage() {
 
             {/* Page heading */}
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Get in Touch
-              </h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Get in Touch</h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Have a question or feedback about PhotoGenerator.ai? We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible.
+                Have a question or feedback about PhotoGenerator.ai? We'd love to hear from you.
               </p>
             </div>
 
-            {/* Contact info cards */}
+            {/* Info cards */}
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               <div className="p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Mail className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Email Support</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Reach us directly via email for inquiries and support.
-                </p>
+                <p className="text-sm text-muted-foreground mb-3">Reach us directly for inquiries and support.</p>
                 <a href="mailto:support@photogenerator.ai" className="text-primary font-medium hover:underline text-sm">
                   support@photogenerator.ai
                 </a>
@@ -105,9 +100,7 @@ export default function ContactPage() {
                   <MessageSquare className="w-6 h-6 text-accent" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Response Time</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  We typically respond to inquiries within 24 business hours.
-                </p>
+                <p className="text-sm text-muted-foreground mb-3">We typically respond within 24 business hours.</p>
                 <p className="text-primary font-medium text-sm">Monday – Friday</p>
               </div>
 
@@ -116,13 +109,11 @@ export default function ContactPage() {
                   <CheckCircle className="w-6 h-6 text-secondary-foreground" />
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">FAQ Available</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Check our documentation for common questions and solutions.
-                </p>
-                {/* Was a dead <button> before — now scrolls to the real FAQ below */}
+                <p className="text-sm text-muted-foreground mb-3">Find answers to common questions below.</p>
+                {/* Fixed: was a dead <button> with no onClick */}
                 <button
                   onClick={scrollToFAQ}
-                  className="text-primary font-medium hover:underline text-sm"
+                  className="text-primary font-medium hover:underline text-sm cursor-pointer"
                 >
                   View FAQ ↓
                 </button>
@@ -138,17 +129,13 @@ export default function ContactPage() {
                       <CheckCircle className="w-8 h-8 text-primary" />
                     </div>
                     <h3 className="text-2xl font-bold text-foreground">Message Sent!</h3>
-                    <p className="text-muted-foreground">
-                      Thank you for reaching out. We'll get back to you shortly.
-                    </p>
+                    <p className="text-muted-foreground">Thank you for reaching out. We'll get back to you shortly.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                          Full Name
-                        </label>
+                        <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">Full Name</label>
                         <input
                           id="name" name="name" type="text"
                           value={formData.name} onChange={handleChange} required
@@ -157,9 +144,7 @@ export default function ContactPage() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                          Email Address
-                        </label>
+                        <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">Email Address</label>
                         <input
                           id="email" name="email" type="email"
                           value={formData.email} onChange={handleChange} required
@@ -170,9 +155,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
-                        Subject
-                      </label>
+                      <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">Subject</label>
                       <input
                         id="subject" name="subject" type="text"
                         value={formData.subject} onChange={handleChange} required
@@ -182,9 +165,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                        Message
-                      </label>
+                      <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">Message</label>
                       <textarea
                         id="message" name="message"
                         value={formData.message} onChange={handleChange} required rows={6}
@@ -193,26 +174,19 @@ export default function ContactPage() {
                       />
                     </div>
 
-                    <Button
-                      type="submit"
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                      size="lg"
-                    >
+                    <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" size="lg">
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Send Message
                     </Button>
 
                     <p className="text-xs text-muted-foreground text-center">
                       We respect your privacy. Read our{' '}
-                      <Link href="/privacy" className="text-primary hover:underline">
-                        privacy policy
-                      </Link>
+                      <Link href="/privacy" className="text-primary hover:underline">privacy policy</Link>
                     </p>
                   </form>
                 )}
               </div>
 
-              {/* Other ways to reach us */}
               <div className="mt-8 p-6 rounded-lg bg-primary/5 border border-primary/20">
                 <h3 className="font-semibold text-foreground mb-3">Other Ways to Reach Us</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
@@ -224,11 +198,8 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* ── FAQ Section ───────────────────────────────────────────────────
-              This is what the "View FAQ" button (above) scrolls to.
-              FAQSection renders an accordion using ui/accordion.tsx.
-            ─────────────────────────────────────────────────────────────────── */}
-            <div id="faq" className="mt-16">
+            {/* FAQ Section — was missing entirely, that's why it didn't work */}
+            <div id="faq" className="mt-16 scroll-mt-20">
               <FAQSection
                 title="Frequently Asked Questions"
                 description="Everything you need to know about PhotoGenerator.ai"

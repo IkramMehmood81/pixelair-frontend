@@ -222,14 +222,14 @@
     position: relative;
   }
 
-  a:where(:not(.btn, [role="button"])) {
+  a:where(:not(.btn, [role="button"], nav a, header a, [data-no-underline])) {
     text-decoration: underline;
     text-underline-offset: 0.35em;
     text-decoration-thickness: 1.5px;
     text-decoration-color: hsl(var(--primary) / 0.5);
   }
   
-  a:hover:where(:not(.btn, [role="button"])) {
+  a:hover:where(:not(.btn, [role="button"], nav a, header a, [data-no-underline])) {
     text-decoration-color: hsl(var(--primary));
     text-decoration-thickness: 2px;
   }

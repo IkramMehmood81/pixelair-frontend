@@ -59,6 +59,9 @@ export function Footer() {
           <div className="flex flex-col gap-5 xs:gap-6">
             <h4 className="text-xs xs:text-sm font-bold text-foreground tracking-widest uppercase">Resources</h4>
             <nav className="flex flex-col gap-3" aria-label="Resource links">
+              <Link href="/blog" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
+                Blog
+              </Link>
               <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
                 Contact
               </Link>
