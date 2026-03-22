@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -55,6 +56,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased bg-background text-foreground" suppressHydrationWarning>
         {children}
+        <Toaster />
         <Analytics />
       </body>
     </html>
