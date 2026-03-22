@@ -159,7 +159,7 @@ export default async function BlogListPage() {
       <Header />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-background via-background to-card/30">
+        <section className="relative py-8 sm:py-12 overflow-hidden bg-gradient-to-b from-background via-background to-card/30">
           <div className="absolute inset-0 -z-10 opacity-30">
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
           </div>

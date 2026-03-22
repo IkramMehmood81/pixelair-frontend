@@ -79,7 +79,17 @@ export async function generateMetadata({
 // We inline the safe-render here to keep the file count low.
 // The actual sanitisation happens via a small wrapper.
 
+/**
+ * Strips the first <h1> from CMS-provided HTML to prevent duplicate titles.
+ * GoHighLevel (GHL) injects the post title into the body content, but we
+ * already render it explicitly above — two H1s hurt SEO and look broken.
+ */
+function stripFirstH1(html: string): string {
+  return html.replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, "").trimStart();
+}
+
 function BlogContent({ html }: { html: string }) {
+  const sanitised = stripFirstH1(html);
   // For server rendering we trust the content comes from GHL (your own CMS).
   // If you want client-side DOMPurify, convert this to a 'use client' component.
   return (
@@ -97,7 +107,7 @@ function BlogContent({ html }: { html: string }) {
         prose-strong:text-foreground
         prose-li:text-foreground/80
       "
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={{ __html: sanitised }}
     />
   );
 }
