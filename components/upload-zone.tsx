@@ -5,7 +5,7 @@ import { Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface UploadZoneProps {
-  onFileSelect: (file: File) => void
+  onFileSelect: (file: File | null) => void
   selectedFile?: File | null
   preview?: string
 }
@@ -68,7 +68,7 @@ export function UploadZone({ onFileSelect, selectedFile, preview }: UploadZonePr
             <Button 
               onClick={() => {
                 setIsDragActive(false)
-                onFileSelect(null as any)
+                onFileSelect(null)
               }}
               variant="outline"
               size="icon"

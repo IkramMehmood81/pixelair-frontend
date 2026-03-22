@@ -104,9 +104,15 @@ export async function fetchBlogBySlug(
 /**
  * Invalidate the backend blog cache.
  * Call after publishing or updating a post in GoHighLevel.
+ * Protected by a shared secret to prevent unauthorized cache busting.
  */
 export async function invalidateBlogCache(): Promise<void> {
-  await fetch(`${API_BASE}/blogs/cache`, { method: "DELETE" });
+  await fetch(`${API_BASE}/blogs/cache`, {
+    method: "DELETE",
+    headers: {
+      "x-cache-secret": process.env.CACHE_INVALIDATION_SECRET ?? "",
+    },
+  });
 }
 
 // ── Formatting helpers ─────────────────────────────────────────────────────────

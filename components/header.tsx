@@ -68,7 +68,7 @@ export function Header() {
     }
   }, [isHome, router])
 
-  const scrollToUpload = useCallback(() => scrollToSection('upload'), [scrollToSection])
+  const scrollToUpload = useCallback(() => scrollToSection('upload-idle'), [scrollToSection])
 
   return (
     <>

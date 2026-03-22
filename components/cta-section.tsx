@@ -1,24 +1,35 @@
-import Link from 'next/link'
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+
+interface CTALink {
+  text: string
+  href: string
+}
 
 interface CTASectionProps {
   title: string
   description: string
-  primaryCTA?: {
-    text: string
-    href: string
-  }
-  secondaryCTA?: {
-    text: string
-    href: string
+  primaryCTA?: CTALink
+  secondaryCTA?: CTALink
+}
+
+function scrollToId(href: string) {
+  // If it's an anchor like #upload-idle, smooth-scroll to it
+  if (href.startsWith('#')) {
+    const id = href.slice(1)
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  } else {
+    window.location.href = href
   }
 }
 
 export function CTASection({
   title,
   description,
-  primaryCTA = { text: 'Get Started', href: '/' },
+  primaryCTA = { text: 'Get Started', href: '#upload-idle' },
   secondaryCTA,
 }: CTASectionProps) {
   return (
@@ -42,28 +53,50 @@ export function CTASection({
         </div>
         
         <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-center gap-3 xs:gap-4 pt-6 xs:pt-8 px-2 xs:px-0">
-          <Button 
-            asChild
-            size="lg"
-            className="w-full xs:w-auto px-6 xs:px-8 py-5 xs:py-6 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-bold shadow-2xl shadow-primary/40 hover:shadow-3xl hover:shadow-primary/60 group border border-primary/30 text-sm xs:text-base"
-          >
-            <Link href={primaryCTA.href} className="flex items-center justify-center xs:justify-start gap-2 xs:gap-3">
+          {primaryCTA.href.startsWith('#') ? (
+            <Button
+              onClick={() => scrollToId(primaryCTA.href)}
+              size="lg"
+              className="w-full xs:w-auto px-6 xs:px-8 py-5 xs:py-6 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-bold shadow-2xl shadow-primary/40 hover:shadow-3xl hover:shadow-primary/60 group border border-primary/30 text-sm xs:text-base flex items-center justify-center gap-2 xs:gap-3 cursor-pointer"
+            >
               {primaryCTA.text}
               <ArrowRight className="w-4 xs:w-5 h-4 xs:h-5 group-hover:translate-x-2 transition-transform duration-300" />
-            </Link>
-          </Button>
-          
-          {secondaryCTA && (
-            <Button 
+            </Button>
+          ) : (
+            <Button
               asChild
               size="lg"
-              variant="outline"
-              className="w-full xs:w-auto px-6 xs:px-8 py-5 xs:py-6 border-primary/50 hover:border-primary/70 bg-transparent hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/15 text-foreground hover:text-primary shadow-lg shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 text-sm xs:text-base"
+              className="w-full xs:w-auto px-6 xs:px-8 py-5 xs:py-6 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-bold shadow-2xl shadow-primary/40 hover:shadow-3xl hover:shadow-primary/60 group border border-primary/30 text-sm xs:text-base"
             >
-              <Link href={secondaryCTA.href}>
-                {secondaryCTA.text}
+              <Link href={primaryCTA.href} className="flex items-center justify-center xs:justify-start gap-2 xs:gap-3">
+                {primaryCTA.text}
+                <ArrowRight className="w-4 xs:w-5 h-4 xs:h-5 group-hover:translate-x-2 transition-transform duration-300" />
               </Link>
             </Button>
+          )}
+
+          {secondaryCTA && (
+            secondaryCTA.href.startsWith('#') ? (
+              <Button
+                onClick={() => scrollToId(secondaryCTA.href)}
+                size="lg"
+                variant="outline"
+                className="w-full xs:w-auto px-6 xs:px-8 py-5 xs:py-6 border-primary/50 hover:border-primary/70 bg-transparent hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/15 text-foreground hover:text-primary shadow-lg shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 text-sm xs:text-base cursor-pointer"
+              >
+                {secondaryCTA.text}
+              </Button>
+            ) : (
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="w-full xs:w-auto px-6 xs:px-8 py-5 xs:py-6 border-primary/50 hover:border-primary/70 bg-transparent hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/15 text-foreground hover:text-primary shadow-lg shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 text-sm xs:text-base"
+              >
+                <Link href={secondaryCTA.href}>
+                  {secondaryCTA.text}
+                </Link>
+              </Button>
+            )
           )}
         </div>
       </div>

@@ -9,8 +9,48 @@ const MAX_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
 
+// ── In-memory rate limiter (per IP, sliding window) ───────────────────────────
+// Allows 10 requests per 60 seconds per IP. No external dependency needed.
+const RATE_LIMIT_MAX    = 10
+const RATE_LIMIT_WINDOW = 60_000 // 1 minute in ms
+const ipTimestamps      = new Map<string, number[]>()
+
+function isRateLimited(ip: string): boolean {
+  const now  = Date.now()
+  const hits = (ipTimestamps.get(ip) ?? []).filter(t => now - t < RATE_LIMIT_WINDOW)
+  hits.push(now)
+  ipTimestamps.set(ip, hits)
+  // Periodically clean stale IPs to prevent memory growth
+  if (ipTimestamps.size > 5000) {
+    for (const [key, times] of ipTimestamps) {
+      if (times.every(t => now - t >= RATE_LIMIT_WINDOW)) ipTimestamps.delete(key)
+    }
+  }
+  return hits.length > RATE_LIMIT_MAX
+}
+
+// ── Magic-byte validation — cannot be spoofed by the client ──────────────────
+async function hasValidImageBytes(file: File): Promise<boolean> {
+  const buf  = await file.slice(0, 12).arrayBuffer()
+  const b    = new Uint8Array(buf)
+  const isJpeg = b[0] === 0xFF && b[1] === 0xD8
+  const isPng  = b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47
+  const isWebp = b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46
+                 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50
+  return isJpeg || isPng || isWebp
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // ── 0. Rate limiting ───────────────────────────────────────────────────
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous'
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait a minute and try again.' },
+        { status: 429 }
+      )
+    }
+
     // ── 1. Parse incoming multipart form ──────────────────────────────────
     const formData = await req.formData()
     const file = formData.get('image') as File | null
@@ -33,6 +73,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: 'File too large. Maximum size is 10 MB.' },
         { status: 413 }
+      )
+    }
+
+    // ── 2b. Magic-byte check — verifies the real file bytes, not just header ──
+    if (!(await hasValidImageBytes(file))) {
+      return NextResponse.json(
+        { error: 'Invalid image file. Please upload a real JPEG, PNG, or WebP image.' },
+        { status: 415 }
       )
     }
 

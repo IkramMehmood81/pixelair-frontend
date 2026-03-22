@@ -1,11 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -17,8 +11,21 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.filesafe.space' },
       { protocol: 'https', hostname: 'storage.googleapis.com' },
       { protocol: 'https', hostname: '**.googleapis.com' },
-      { protocol: 'https', hostname: '**' },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Frame-Options',           value: 'DENY' },
+          { key: 'X-Content-Type-Options',    value: 'nosniff' },
+          { key: 'Referrer-Policy',           value: 'strict-origin-when-cross-origin' },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
+          { key: 'Permissions-Policy',        value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ]
   },
   async rewrites() {
     const apiBase =
@@ -26,7 +33,7 @@ const nextConfig = {
       process.env.API_URL ||
       'http://localhost:8000'
     return [
-      { source: '/api/enhance', destination: `${apiBase}/enhance-image` },
+      { source: '/api/enhance',      destination: `${apiBase}/enhance-image` },
       { source: '/api/blogs/:path*', destination: `${apiBase}/blogs/:path*` },
     ]
   },

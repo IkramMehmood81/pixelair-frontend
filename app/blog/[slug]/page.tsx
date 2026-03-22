@@ -79,19 +79,33 @@ export async function generateMetadata({
 // We inline the safe-render here to keep the file count low.
 // The actual sanitisation happens via a small wrapper.
 
-/**
- * Strips the first <h1> from CMS-provided HTML to prevent duplicate titles.
- * GoHighLevel (GHL) injects the post title into the body content, but we
- * already render it explicitly above — two H1s hurt SEO and look broken.
- */
-function stripFirstH1(html: string): string {
-  return html.replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, "").trimStart();
+// ── Safe HTML sanitizer — strips scripts, on* handlers, and dangerous tags ────
+// Uses a server-side regex allowlist so no client bundle is needed.
+// This runs on the server (no 'use client'), which is safer than browser DOMPurify
+// because the content never reaches the browser unsanitized.
+function sanitizeHtml(raw: string): string {
+  // 1. Strip the duplicate H1 injected by GHL
+  let html = raw.replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, "").trimStart();
+
+  // 2. Remove all <script> blocks and their content
+  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+
+  // 3. Remove all <style> blocks
+  html = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
+
+  // 4. Remove all <iframe>, <object>, <embed>, <form>, <input> tags
+  html = html.replace(/<\/?(?:iframe|object|embed|form|input|button|select|textarea)[^>]*>/gi, "");
+
+  // 5. Strip dangerous attributes (on*, javascript:, data:)
+  html = html.replace(/\s(?:on\w+|srcdoc|action|formaction)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "");
+  html = html.replace(/\s(?:href|src|poster|background)\s*=\s*"(?:javascript:|data:)[^"]*"/gi, "");
+  html = html.replace(/\s(?:href|src|poster|background)\s*=\s*'(?:javascript:|data:)[^']*'/gi, "");
+
+  return html;
 }
 
 function BlogContent({ html }: { html: string }) {
-  const sanitised = stripFirstH1(html);
-  // For server rendering we trust the content comes from GHL (your own CMS).
-  // If you want client-side DOMPurify, convert this to a 'use client' component.
+  const safe = sanitizeHtml(html);
   return (
     <div
       className="
@@ -107,7 +121,7 @@ function BlogContent({ html }: { html: string }) {
         prose-strong:text-foreground
         prose-li:text-foreground/80
       "
-      dangerouslySetInnerHTML={{ __html: sanitised }}
+      dangerouslySetInnerHTML={{ __html: safe }}
     />
   );
 }

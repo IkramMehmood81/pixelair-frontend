@@ -110,7 +110,10 @@ async function compressImage(file: File): Promise<File> {
           CANVAS_QUALITY,
         )
       }
-      img.onerror = () => resolve(file)
+      img.onerror = () => {
+        console.warn('[compressImage] failed to load image for compression — sending original file')
+        resolve(file)
+      }
       img.src = reader.result as string
     }
     reader.readAsDataURL(file)
@@ -152,6 +155,7 @@ function HomePageInner() {
   const [result,        setResult]      = useState<EnhanceResult | null>(null)
   const [errorMsg,      setErrorMsg]    = useState('')
   const previewRef = useRef<string>('')  // keeps preview alive after file cleared
+  const abortRef   = useRef<AbortController | null>(null)  // cancels in-flight enhance fetch
 
   // ── Cross-page scroll (?scroll= param from header nav) ───────────────────
   useEffect(() => {
@@ -172,6 +176,11 @@ function HomePageInner() {
     const id = setInterval(() => setActiveStep(s => Math.min(s + 1, STEPS.length - 1)), 2200)
     return () => clearInterval(id)
   }, [stage])
+
+  // ── Abort in-flight request on unmount ───────────────────────────────────
+  useEffect(() => {
+    return () => { abortRef.current?.abort() }
+  }, [])
 
   // ── Scroll to #upload section ─────────────────────────────────────────────
   const scrollTo = (id: string) => {
@@ -226,7 +235,8 @@ function HomePageInner() {
       form.append('scale',        scale === '4x' ? '4' : '2')
       form.append('face_enhance', String(face))
 
-      const res = await fetch('/api/enhance', { method: 'POST', body: form })
+      abortRef.current = new AbortController()
+      const res = await fetch('/api/enhance', { method: 'POST', body: form, signal: abortRef.current.signal })
 
       let data: Record<string, unknown> = {}
       try { data = await res.json() }
@@ -243,7 +253,7 @@ function HomePageInner() {
 
       // Scroll up to show result
       requestAnimationFrame(() => {
-        document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        document.getElementById('upload-done')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       })
 
     } catch (err: unknown) {
@@ -265,7 +275,8 @@ function HomePageInner() {
   }
 
   const handleEnhanceAnother = () => {
-    // Reset everything — no cleanup needed because nothing was stored
+    // Abort any in-flight enhancement then reset state
+    abortRef.current?.abort()
     handleFileSelect(null)
     setStage('idle')
     setEnhancedUrl('')
@@ -273,7 +284,7 @@ function HomePageInner() {
     setErrorMsg('')
     setActiveStep(0)
     requestAnimationFrame(() =>
-      document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document.getElementById('upload-idle')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     )
   }
 
@@ -318,7 +329,7 @@ function HomePageInner() {
 
               <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-center gap-3 xs:gap-4 pt-2 px-2 xs:px-0">
                 <button
-                  onClick={() => scrollTo('upload')}
+                  onClick={() => scrollTo('upload-idle')}
                   aria-label="Start enhancing your photos"
                   className="flex items-center justify-center gap-3 px-6 xs:px-8 py-4 xs:py-5 rounded-xl text-sm xs:text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 active:scale-[0.98] cursor-pointer"
                 >
@@ -346,7 +357,7 @@ function HomePageInner() {
 
         {/* ── Upload + Enhance (idle state) ────────────────────────────────── */}
         {(stage === 'idle' || stage === 'error') && (
-          <GradientSection id="upload">
+          <GradientSection id="upload-idle">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center space-y-4 mb-10">
                 <h2 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
@@ -468,7 +479,7 @@ function HomePageInner() {
 
         {/* ── Enhancing (processing state) ─────────────────────────────────── */}
         {stage === 'enhancing' && (
-          <GradientSection id="upload" className="flex items-center justify-center min-h-[75vh]">
+          <GradientSection id="upload-enhancing" className="flex items-center justify-center min-h-[75vh]">
             <div className="max-w-md w-full mx-auto px-4 text-center">
               <div className="relative w-20 h-20 mb-8" role="status" aria-label="Enhancing image">
                 <div className="absolute inset-0 rounded-full border-4 border-border" />
@@ -509,7 +520,7 @@ function HomePageInner() {
         {/* ── Done (result state) ───────────────────────────────────────────── */}
         {stage === 'done' && enhancedUrl && (
           <>
-            <GradientSection id="upload">
+            <GradientSection id="upload-done">
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header row */}
@@ -682,7 +693,7 @@ function HomePageInner() {
         <CTASection
           title="Ready to Enhance Your Photos?"
           description="Join thousands of creators improving their images with PhotoGenerator.ai. Get started instantly — no sign-up required."
-          primaryCTA={{ text: 'Start Enhancing', href: '#upload' }}
+          primaryCTA={{ text: 'Start Enhancing', href: '#upload-idle' }}
           secondaryCTA={{ text: 'Learn More', href: '#how-it-works' }}
         />
 
