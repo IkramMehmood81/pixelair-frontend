@@ -43,10 +43,10 @@ export default function NotFound() {
               variant="outline"
               size="lg"
             >
-              <a href="javascript:history.back()" className="flex items-center gap-2">
+              <Link href="/blog" className="flex items-center gap-2">
                 <ArrowLeft className="w-5 h-5" />
-                Go Back
-              </a>
+                Back to Blog
+              </Link>
             </Button>
           </div>
 

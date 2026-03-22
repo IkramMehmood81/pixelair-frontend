@@ -29,12 +29,25 @@ export interface BlogSummary {
   categories: string[];
 }
 
+export interface BlogAuthor {
+  name: string | null;
+  photo: string | null;       // URL to author photo
+  bio: string | null;         // Author description
+  canonicalLink: string | null;
+  facebook: string | null;
+  twitter: string | null;     // "x" in GHL
+  linkedin: string | null;
+  instagram: string | null;
+  youtube: string | null;
+}
+
 export interface BlogDetail extends BlogSummary {
   content: string;
   updatedAt: string | null;
   tags: string[];
   metaTitle: string | null;
   metaDescription: string | null;
+  authorDetails: BlogAuthor | null;  // full author object from GHL
 }
 
 export interface BlogListResponse {
@@ -96,6 +109,9 @@ export async function fetchBlogBySlug(
   slug: string,
   revalidate = 60,
 ): Promise<BlogDetail> {
+  // Each slug is cached independently on the backend under "blog:slug:{slug}".
+  // next: { revalidate } tells Next.js to revalidate this fetch every 60s (ISR).
+  // This means production pages load fast from cache and stay fresh automatically.
   return apiFetch<BlogDetail>(`/blogs/${encodeURIComponent(slug)}`, {
     next: { revalidate },
   });
