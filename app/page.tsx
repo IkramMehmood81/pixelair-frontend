@@ -643,7 +643,9 @@ function HomePageInner() {
           </>
         )}
 
-        {/* ── Features ──────────────────────────────────────────────────────── */}
+        {/* ── Features, How It Works, Testimonials, CTA — only shown on idle/error ── */}
+        {(stage === 'idle' || stage === 'error') && (
+        <>
         <GradientSection id="features">
           <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8">
             <div className="text-center space-y-3 xs:space-y-4 mb-12 xs:mb-14 sm:mb-16 px-2 xs:px-0">
@@ -696,6 +698,8 @@ function HomePageInner() {
           primaryCTA={{ text: 'Start Enhancing', href: '#upload-idle' }}
           secondaryCTA={{ text: 'Learn More', href: '#how-it-works' }}
         />
+        </>
+        )}
 
       </main>
       <Footer />
