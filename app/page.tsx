@@ -302,7 +302,8 @@ function HomePageInner() {
 
       <main className="flex-1">
 
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
+        {/* ── Hero — only shown when idle/error ───────────────────────────── */}
+        {(stage === 'idle' || stage === 'error') && (
         <section className="relative min-h-[70vh] flex items-center justify-center py-10 sm:py-14 bg-gradient-to-b from-background via-background to-card/30 overflow-hidden">
           <div className="absolute inset-0 -z-10 opacity-30">
             <div className="absolute top-10 xs:top-16 sm:top-20 right-0 xs:right-10 w-48 xs:w-56 sm:w-72 h-48 xs:h-56 sm:h-72 bg-primary/5 rounded-full blur-3xl" />
@@ -354,6 +355,7 @@ function HomePageInner() {
             </div>
           </div>
         </section>
+        )}
 
         {/* ── Upload + Enhance (idle state) ────────────────────────────────── */}
         {(stage === 'idle' || stage === 'error') && (
@@ -644,8 +646,7 @@ function HomePageInner() {
         )}
 
         {/* ── Features, How It Works, Testimonials, CTA — only shown on idle/error ── */}
-        {(stage === 'idle' || stage === 'error') && (
-        <>
+        {(stage === 'idle' || stage === 'error') && (<>
         <GradientSection id="features">
           <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8">
             <div className="text-center space-y-3 xs:space-y-4 mb-12 xs:mb-14 sm:mb-16 px-2 xs:px-0">
