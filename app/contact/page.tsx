@@ -10,42 +10,60 @@ import { GradientSection } from '@/components/gradient-section'
 import { FAQSection } from '@/components/faq-section'
 
 // ── FAQ data ──────────────────────────────────────────────────────────────────
+// These Q&As exactly match the FAQPage JSON-LD below — keep them in sync.
 
 const FAQ_ITEMS = [
   {
     question: 'What image formats are supported?',
-    answer: 'We support JPEG, PNG, and WebP images up to 10 MB. For best results use a clear, well-lit photo.',
+    answer:   'We support JPEG, PNG, and WebP images up to 10 MB. For best results use a clear, well-lit photo.',
   },
   {
     question: 'Are my uploaded images stored on your servers?',
-    answer: 'No. Images are sent directly to the AI for processing and are never stored on our servers. Everything is deleted immediately after enhancement.',
+    answer:   'No. Images are sent directly to the AI for processing and are never stored on our servers. Everything is deleted immediately after enhancement.',
   },
   {
     question: 'What is the difference between 2x and 4x upscaling?',
-    answer: '2x doubles the image dimensions and is much faster — usually under 10 seconds. 4x quadruples the dimensions for a larger output file but takes longer to process.',
+    answer:   '2x doubles the image dimensions and is much faster — usually under 10 seconds. 4x quadruples the dimensions for a larger output file but takes longer to process.',
   },
   {
-    question: 'What does Face Enhancement do?',
-    answer: 'Face Enhancement applies an additional AI restoration pass (GFPGAN) tuned specifically for facial details — sharpening eyes, skin texture, and facial structure. Enable it when your image contains people.',
+    question: 'What does Face Enhancement AI do?',
+    answer:   'Face Enhancement AI applies an additional CodeFormer restoration pass tuned specifically for facial details — sharpening eyes, skin texture, and facial structure. Enable it when your image contains people.',
   },
   {
     question: 'Why did my enhancement fail or time out?',
-    answer: 'Common causes are: the image exceeds 10 MB, an unsupported format was used, or the AI server timed out under high load. Try compressing the image first or switching from 4x to 2x, then retry.',
+    answer:   'Common causes are: the image exceeds 10 MB, an unsupported format was used, or the AI server timed out under high load. Try compressing the image first or switching from 4x to 2x, then retry.',
   },
   {
-    question: 'Is this service really free?',
-    answer: 'Yes — completely free with no watermarks, no account required, and no hidden limits. The service is ad-supported to cover processing costs.',
+    question: 'Is this AI image enhancer really free?',
+    answer:   'Yes — completely free with no watermarks, no account required, and no hidden limits. The service is ad-supported to cover processing costs.',
   },
   {
     question: 'How do I download my enhanced image?',
-    answer: 'Once enhancement is complete, click the "Download Enhanced Image" button. The high-quality file saves directly to your device with no watermark.',
+    answer:   'Once enhancement is complete, click the "Download Enhanced Image" button. The high-quality file saves directly to your device with no watermark.',
   },
 ]
+
+// ── FAQPage JSON-LD — lives here because the FAQ content lives here ────────────
+// Google requires schema to match visible on-page content. Putting it in
+// layout.tsx (sitewide) was incorrect — it must be on the page that renders it.
+const faqStructuredData = {
+  '@context':  'https://schema.org',
+  '@type':     'FAQPage',
+  '@id':       'https://photogenerator.ai/contact#faq',
+  mainEntity: FAQ_ITEMS.map(({ question, answer }) => ({
+    '@type':         'Question',
+    name:            question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text:    answer,
+    },
+  })),
+}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
+  const [formData,  setFormData]  = useState({ name: '', email: '', subject: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -68,13 +86,19 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {/* FAQPage schema — injected only on this page */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
+
       <Header />
 
       <main className="flex-1">
         <GradientSection className="pt-8 sm:pt-10 pb-16 sm:pb-24">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {/* Page heading */}
+            {/* Page heading — H1 with SEO keyword */}
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Get in Touch</h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -90,7 +114,10 @@ export default function ContactPage() {
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Email Support</h3>
                 <p className="text-sm text-muted-foreground mb-3">Reach us directly for inquiries and support.</p>
-                <a href="mailto:support@photogenerator.ai" className="text-primary font-medium hover:underline text-sm">
+                <a
+                  href="mailto:support@photogenerator.ai"
+                  className="text-primary font-medium hover:underline text-sm"
+                >
                   support@photogenerator.ai
                 </a>
               </div>
@@ -110,7 +137,6 @@ export default function ContactPage() {
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">FAQ Available</h3>
                 <p className="text-sm text-muted-foreground mb-3">Find answers to common questions below.</p>
-                {/* Fixed: was a dead <button> with no onClick */}
                 <button
                   onClick={scrollToFAQ}
                   className="text-primary font-medium hover:underline text-sm cursor-pointer"
@@ -198,11 +224,11 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* FAQ Section — was missing entirely, that's why it didn't work */}
+            {/* FAQ — rendered here, schema injected above */}
             <div id="faq" className="mt-16 scroll-mt-20">
               <FAQSection
                 title="Frequently Asked Questions"
-                description="Everything you need to know about PhotoGenerator.ai"
+                description="Everything you need to know about our free AI image enhancer"
                 items={FAQ_ITEMS}
               />
             </div>

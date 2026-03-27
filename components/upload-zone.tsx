@@ -28,7 +28,6 @@ export function UploadZone({ onFileSelect, selectedFile, preview }: UploadZonePr
     e.preventDefault()
     e.stopPropagation()
     setIsDragActive(false)
-
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0]
       if (file.type.startsWith('image/')) {
@@ -40,38 +39,54 @@ export function UploadZone({ onFileSelect, selectedFile, preview }: UploadZonePr
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       onFileSelect(e.target.files[0])
+      // Reset input value so selecting the same file again still triggers onChange
+      e.target.value = ''
     }
   }
 
   const handleClick = () => {
-    inputRef.current?.click()
+    // Reset value first so re-selecting the same file works
+    if (inputRef.current) {
+      inputRef.current.value = ''
+      inputRef.current.click()
+    }
   }
 
   return (
     <div className="w-full">
+      {/* Hidden file input — always in DOM so inputRef is never null */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleInputChange}
+        className="hidden"
+      />
+
       {preview ? (
         <div className="space-y-3 xs:space-y-4">
           <div className="relative bg-card border border-border rounded-lg xs:rounded-xl overflow-hidden">
-            <img 
-              src={preview} 
-              alt="Preview" 
+            <img
+              src={preview}
+              alt="Preview of selected image"
               className="w-full h-auto max-h-64 xs:max-h-96 object-contain"
             />
           </div>
           <div className="flex gap-2">
-            <Button 
+            <Button
               onClick={handleClick}
               className="flex-1 bg-primary hover:bg-primary/90 text-sm xs:text-base"
             >
               Change Image
             </Button>
-            <Button 
+            <Button
               onClick={() => {
                 setIsDragActive(false)
                 onFileSelect(null)
               }}
               variant="outline"
               size="icon"
+              aria-label="Remove selected image"
             >
               <X className="w-4 h-4" />
             </Button>
@@ -103,13 +118,6 @@ export function UploadZone({ onFileSelect, selectedFile, preview }: UploadZonePr
               </p>
             </div>
           </div>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleInputChange}
-            className="hidden"
-          />
         </div>
       )}
     </div>
