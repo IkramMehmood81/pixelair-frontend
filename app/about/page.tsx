@@ -4,9 +4,9 @@ import { Footer } from '@/components/footer'
 import { GradientSection } from '@/components/gradient-section'
 
 export const metadata: Metadata = {
-  title: 'About Us — PhotoGenerator.ai',
+  title: 'About Us — Free AI Image Enhancer | PhotoGenerator.ai',
   description:
-    'We built PhotoGenerator.ai so that getting high-quality photos is free, fast, and simple — no paywalls, no sign-up required.',
+    'Learn about PhotoGenerator.ai — a free AI image enhancer that sharpens blurry photos, restores old images, and upscales resolution online. No sign-up required.',
 }
 
 export default function AboutPage() {

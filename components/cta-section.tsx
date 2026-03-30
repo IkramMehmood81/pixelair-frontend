@@ -44,10 +44,16 @@ export function CTASection({
       
       <div className="relative max-w-5xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 text-center space-y-8 xs:space-y-10">
         <div className="space-y-5 xs:space-y-6">
-          <h2 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-bold text-foreground text-balance leading-[1.1] sm:leading-[1.15] tracking-tight">
+          <h2
+            className="font-bold text-foreground text-balance tracking-tight"
+            style={{ fontSize: 'clamp(1.75rem, 6vw, 4.25rem)', lineHeight: 1.1 }}
+          >
             {title}
           </h2>
-          <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-foreground/70 text-balance max-w-3xl mx-auto leading-relaxed font-light px-2 xs:px-0">
+          <p
+            className="text-foreground/70 text-balance max-w-3xl mx-auto leading-relaxed font-light px-2 xs:px-0"
+            style={{ fontSize: 'clamp(0.9rem, 2vw, 1.375rem)' }}
+          >
             {description}
           </p>
         </div>

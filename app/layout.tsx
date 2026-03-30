@@ -10,11 +10,11 @@ import './globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL('https://photogenerator.ai'),
   title: {
-    default: 'AI Image Enhancer — Free Photo Enhancer Online | PhotoGenerator.ai',
+    default: 'Free AI Image Enhancer — Fix Blurry Photos Online Instantly | PhotoGenerator.ai',
     template: '%s | PhotoGenerator.ai',
   },
   description:
-    'Free AI image enhancer & photo upscaler online. Enhance image quality, restore old photos, and boost resolution with AI. No sign-up. 100% free. Results in seconds.',
+    'Fix blurry photos instantly with our free AI image enhancer. Sharpen, restore, and upscale images online — no sign-up, no watermark. Results in 8–12 seconds.',
   keywords: [
     'AI image enhancer',
     'photo enhancer online',
@@ -32,6 +32,27 @@ export const metadata: Metadata = {
     'photo clarity enhancer',
     'free image upscaler',
     'online photo quality improvement',
+    "free ai upscaler",
+    "ai enhancement tools",
+    "photo restoration ai",
+    "old photo correction software",
+    "ai image upscale",
+    "better quality image online",
+    "restore photos online free",
+    "clear old photos software",
+    "ai image restoration",
+    "enhance old photos free",
+    "photo detail enhancer",
+    "sharpen old images free",
+    "online photo upscaler tool",
+    "restore blurry images ai",
+    "ai automatic photo editing",
+    "increase image resolution ai",
+    "free picture quality enhancer",
+    "ai fix old photos",
+    "improve photo quality online",
+    "best ai upscaler tool"
+
   ],
   authors:   [{ name: 'PhotoGenerator.ai' }],
   creator:   'PhotoGenerator.ai',
@@ -56,8 +77,8 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   openGraph: {
-    title:       'AI Image Enhancer — Free Photo Enhancer Online | PhotoGenerator.ai',
-    description: 'Enhance image quality instantly with AI. Upscale photos, restore old pictures, and sharpen blurry images — 100% free, no sign-up required.',
+    title:       'Free AI Image Enhancer — Fix Blurry Photos Online | PhotoGenerator.ai',
+    description: 'Fix blurry photos instantly with AI. Sharpen, restore, and upscale images online — no sign-up, no watermarks, completely free.',
     type:        'website',
     url:         'https://photogenerator.ai',
     siteName:    'PhotoGenerator.ai',
@@ -73,8 +94,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'Free AI Image Enhancer & Photo Upscaler | PhotoGenerator.ai',
-    description: 'Enhance, upscale, and restore your photos with AI. Free, instant, no sign-up.',
+    title:       'Free AI Image Enhancer — Fix Blurry Photos Instantly | PhotoGenerator.ai',
+    description: 'Fix blurry photos, restore old pictures, and upscale image resolution with AI. Free, instant, no sign-up.',
     images:      ['/og-image.png'],
     creator:     '@photogeneratorai',
     site:        '@photogeneratorai',
@@ -96,9 +117,9 @@ const structuredData = {
     {
       '@type':               'WebApplication',
       '@id':                 'https://photogenerator.ai/#webapp',
-      name:                  'PhotoGenerator.ai — AI Image Enhancer',
+      name:                  'PhotoGenerator.ai — Free AI Image Enhancer',
       url:                   'https://photogenerator.ai',
-      description:           'Free AI-powered image enhancer. Upscale photos, restore old images, enhance face details, and improve photo quality online.',
+      description:           'Fix blurry photos, sharpen low-quality images, restore old photos, and upscale image resolution online — free, no sign-up required.',
       applicationCategory:   'PhotoEditorApplication',
       operatingSystem:       'Web',
       offers: {

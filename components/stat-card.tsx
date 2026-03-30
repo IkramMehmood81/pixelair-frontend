@@ -6,38 +6,52 @@ interface StatCardProps {
   highlight?: boolean
 }
 
+/**
+ * StatCard — fluid responsive, no truncation
+ *
+ * Key fixes:
+ * - Removed overflow-hidden from Card (was clipping wrapped labels)
+ * - Removed whitespace-nowrap on label (was forcing ellipsis truncation)
+ * - Inline style for clamp() — avoids Tailwind JIT/SSR hydration mismatches
+ *   that occur with arbitrary clamp() in className strings
+ * - Lower floor values: 0.75rem value, 0.55rem label — readable on 320px phones
+ * - gap and padding via inline style for same SSR-safety reason
+ */
 export function StatCard({ value, label, highlight = false }: StatCardProps) {
   return (
     <Card
-      className={`group relative p-6 sm:p-8 md:p-10 flex items-center justify-center text-center transition-all duration-400 hover:shadow-2xl hover:-translate-y-2 border overflow-hidden ${
+      className={[
+        'flex flex-col items-center justify-center text-center',
+        'min-w-0 w-full transition-all duration-300',
         highlight
-          ? 'bg-gradient-to-br from-primary/20 via-primary/12 to-accent/15 border-primary/50 hover:border-primary/70 hover:shadow-primary/30'
-          : 'bg-gradient-to-br from-card/70 to-card/40 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-gradient-to-br hover:from-primary/15 hover:to-accent/10'
-      }`}
+          ? 'bg-primary/15 border-primary/40'
+          : 'bg-card/70 border-primary/20',
+      ].join(' ')}
+      style={{
+        padding: 'clamp(6px, 2vw, 16px) clamp(4px, 1.5vw, 12px)',
+        gap: 'clamp(2px, 0.8vw, 6px)',
+      }}
     >
-      {/* Decorative Gradient Orb */}
-      <div className="absolute -right-8 -top-8 w-32 h-32 bg-gradient-to-br from-primary/25 to-accent/15 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-xl"></div>
-
-      <div className="relative z-10 flex flex-col items-center justify-center gap-3">
-        
-        {/* Value */}
-        <div
-          className={`font-bold tracking-tighter leading-none whitespace-nowrap transition-all duration-300
-          text-[clamp(2rem,4vw,3.2rem)] ${
-            highlight
-              ? 'text-transparent bg-gradient-to-r from-primary to-accent bg-clip-text group-hover:from-accent group-hover:to-primary'
-              : 'text-foreground group-hover:text-primary'
-          }`}
-        >
-          {value}
-        </div>
-
-        {/* Label */}
-        <p className="text-[clamp(0.8rem,1.4vw,1rem)] font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-300 tracking-wide">
-          {label}
-        </p>
-
+      <div
+        className={[
+          'font-bold leading-none whitespace-nowrap',
+          highlight ? 'text-primary' : 'text-foreground',
+        ].join(' ')}
+        style={{ fontSize: 'clamp(0.75rem, 3.5vw, 2rem)' }}
+      >
+        {value}
       </div>
+      <p
+        className="text-muted-foreground text-center leading-tight w-full"
+        style={{
+          fontSize: 'clamp(0.55rem, 1.6vw, 0.8rem)',
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+          hyphens: 'auto',
+        }}
+      >
+        {label}
+      </p>
     </Card>
   )
 }

@@ -137,12 +137,24 @@
     letter-spacing: -0.01em;
   }
   
-  /* Professional Typography Hierarchy with Premium Fonts */
+  /* Professional Typography Hierarchy with Premium Fonts
+   *
+   * RESPONSIVE SYSTEM NOTES:
+   * - clamp(floor, preferred, cap)
+   * - floor: smallest readable size on 320px phone
+   * - preferred: vw-based, scales naturally with viewport
+   * - cap: maximum size on large desktop
+   *
+   * Tailwind utility classes (text-4xl etc.) in className props have higher
+   * specificity than these base layer rules when used on the same element.
+   * Prefer inline style={{ fontSize: 'clamp(...)' }} on individual elements
+   * to guarantee fluid sizing without specificity battles.
+   */
   h1 {
     font-family: var(--font-playfair);
     @apply font-bold text-foreground;
-    font-size: clamp(2.8rem, 7vw, 4.5rem);
-    line-height: 1.05;
+    font-size: clamp(1.75rem, 6vw, 4.25rem);
+    line-height: 1.1;
     letter-spacing: -0.03em;
     font-weight: 700;
     text-balance: pretty;
@@ -151,7 +163,7 @@
   h2 {
     font-family: var(--font-playfair);
     @apply font-bold text-foreground;
-    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-size: clamp(1.5rem, 4vw, 3rem);
     line-height: 1.12;
     letter-spacing: -0.025em;
     font-weight: 700;
@@ -161,7 +173,7 @@
   h3 {
     font-family: var(--font-inter);
     @apply font-bold text-foreground;
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-size: clamp(1.1rem, 3vw, 1.875rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
     font-weight: 700;
@@ -361,4 +373,51 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground));
+}
+
+/* ─── Reusable Responsive System ─────────────────────────────────────────────
+ *
+ * Usage pattern for future components:
+ *
+ *   TYPOGRAPHY (always use clamp, never fixed px or step-breakpoints alone):
+ *   - Display / hero h1:  font-size: clamp(1.75rem, 6vw, 4.25rem)
+ *   - Section h2:         font-size: clamp(1.5rem, 4vw, 3rem)
+ *   - Card h3:            font-size: clamp(1.1rem, 3vw, 1.875rem)
+ *   - Body:               font-size: clamp(0.875rem, 1.6vw, 1rem)
+ *   - Small / caption:    font-size: clamp(0.7rem, 1.4vw, 0.875rem)
+ *   - Stat value:         font-size: clamp(0.75rem, 3.5vw, 2rem)
+ *   - Stat label:         font-size: clamp(0.55rem, 1.6vw, 0.8rem)
+ *
+ *   SPACING (prefer clamp over breakpoint-stacked margin/padding):
+ *   - Section vertical:   padding: clamp(2rem, 6vw, 5rem) 0
+ *   - Card padding:       padding: clamp(6px, 2vw, 16px) clamp(4px, 1.5vw, 12px)
+ *   - Grid gap:           gap: clamp(4px, 1.5vw, 24px)
+ *
+ *   CRITICAL RULES:
+ *   1. Never use clamp() inside Tailwind className strings (arbitrary values
+ *      like text-[clamp(...)]) — they cause SSR/hydration mismatches.
+ *      Always use inline style={{ fontSize: 'clamp(...)' }} instead.
+ *   2. Never combine overflow-hidden on a container + whitespace-nowrap on
+ *      a child — this forces invisible truncation. Choose one or the other.
+ *   3. For 4-column stat grids: use grid-cols-4 always (not responsive cols).
+ *      Let clamp() on content handle the visual scaling — don't reflow to 2 cols.
+ *   4. Absolutely-positioned sibling labels (like slider labels): always set
+ *      max-width: 44% on each — they can never overlap at any viewport size.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/* Utility: fluid container horizontal padding */
+.fluid-px {
+  padding-left: clamp(0.75rem, 3vw, 2rem);
+  padding-right: clamp(0.75rem, 3vw, 2rem);
+}
+
+/* Utility: fluid section vertical padding */
+.fluid-py {
+  padding-top: clamp(2rem, 6vw, 5rem);
+  padding-bottom: clamp(2rem, 6vw, 5rem);
+}
+
+/* Utility: fluid gap for grids */
+.fluid-gap {
+  gap: clamp(0.5rem, 2vw, 1.5rem);
 }
