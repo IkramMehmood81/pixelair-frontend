@@ -1,20 +1,20 @@
+import './globals.css'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/toaster'
-import './globals.css'
 
 // ─── Sitewide metadata ────────────────────────────────────────────────────────
 // title.template applies to all child pages automatically:
-// e.g. about/page.tsx exports title:"About Us" → renders as "About Us | PhotoGenerator.ai"
+// e.g. about/page.tsx exports title:"About Us" → renders as "About Us | PhotoGenerate AI"
 export const metadata: Metadata = {
-  metadataBase: new URL('https://photogenerator.ai'),
+  metadataBase: new URL('https://photogenerate.ai'),
   title: {
-    default: 'Free AI Image Enhancer — Fix Blurry Photos Online Instantly | PhotoGenerator.ai',
-    template: '%s | PhotoGenerator.ai',
+    default: 'AI Photo Enhancer — Fix Blurry Photos Free in Seconds | PhotoGenerate AI',
+    template: '%s | PhotoGenerate AI',
   },
   description:
-    'Fix blurry photos instantly with our free AI image enhancer. Sharpen, restore, and upscale images online — no sign-up, no watermark. Results in 8–12 seconds.',
+    'Upload any blurry, grainy, or low-res photo and get a sharp HD result in seconds — completely free. No signup, no watermark, no software needed. Try PhotoGenerate AI now →',
   keywords: [
     'AI image enhancer',
     'photo enhancer online',
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
     "best ai upscaler tool"
 
   ],
-  authors:   [{ name: 'PhotoGenerator.ai' }],
-  creator:   'PhotoGenerator.ai',
-  publisher: 'PhotoGenerator.ai',
+  authors:   [{ name: 'PhotoGenerate AI' }],
+  creator:   'PhotoGenerate AI',
+  publisher: 'PhotoGenerate AI',
   robots: {
     index: true,
     follow: true,
@@ -77,31 +77,31 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   openGraph: {
-    title:       'Free AI Image Enhancer — Fix Blurry Photos Online | PhotoGenerator.ai',
+    title:       'Free AI Image Enhancer — Fix Blurry Photos Online | PhotoGenerate AI',
     description: 'Fix blurry photos instantly with AI. Sharpen, restore, and upscale images online — no sign-up, no watermarks, completely free.',
     type:        'website',
-    url:         'https://photogenerator.ai',
-    siteName:    'PhotoGenerator.ai',
+    url:         'https://photogenerate.ai',
+    siteName:    'PhotoGenerate AI',
     images: [
       {
         url:    '/og-image.png',
         width:  1200,
         height: 630,
-        alt:    'PhotoGenerator.ai — Free AI Image Enhancer and Photo Upscaler Online',
+        alt:    'PhotoGenerate AI — Free AI Image Enhancer and Photo Upscaler Online',
       },
     ],
     locale: 'en_US',
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'Free AI Image Enhancer — Fix Blurry Photos Instantly | PhotoGenerator.ai',
+    title:       'Free AI Image Enhancer — Fix Blurry Photos Instantly | PhotoGenerate AI',
     description: 'Fix blurry photos, restore old pictures, and upscale image resolution with AI. Free, instant, no sign-up.',
     images:      ['/og-image.png'],
-    creator:     '@photogeneratorai',
-    site:        '@photogeneratorai',
+    creator:     '@photogenerateai',
+    site:        '@photogenerateai',
   },
   alternates: {
-    canonical: 'https://photogenerator.ai',
+    canonical: 'https://photogenerate.ai',
   },
   category: 'technology',
 }
@@ -116,9 +116,9 @@ const structuredData = {
     // WebApplication — triggers star ratings & feature list in search
     {
       '@type':               'WebApplication',
-      '@id':                 'https://photogenerator.ai/#webapp',
-      name:                  'PhotoGenerator.ai — Free AI Image Enhancer',
-      url:                   'https://photogenerator.ai',
+      '@id':                 'https://photogenerate.ai/#webapp',
+      name:                  'PhotoGenerate AI — Free AI Image Enhancer',
+      url:                   'https://photogenerate.ai',
       description:           'Fix blurry photos, sharpen low-quality images, restore old photos, and upscale image resolution online — free, no sign-up required.',
       applicationCategory:   'PhotoEditorApplication',
       operatingSystem:       'Web',
@@ -138,7 +138,7 @@ const structuredData = {
         'Free to Use',
         'No Sign-up Required',
       ],
-      screenshot: 'https://photogenerator.ai/og-image.png',
+      screenshot: 'https://photogenerate.ai/og-image.png',
       aggregateRating: {
         '@type':       'AggregateRating',
         ratingValue:   '4.9',
@@ -150,34 +150,71 @@ const structuredData = {
     // Organization
     {
       '@type': 'Organization',
-      '@id':   'https://photogenerator.ai/#org',
-      name:    'PhotoGenerator.ai',
-      url:     'https://photogenerator.ai',
+      '@id':   'https://photogenerate.ai/#org',
+      name:    'PhotoGenerate AI',
+      url:     'https://photogenerate.ai',
       logo: {
         '@type': 'ImageObject',
-        url:     'https://photogenerator.ai/logo-large.png',
+        url:     'https://photogenerate.ai/logo-large.png',
       },
       contactPoint: {
         '@type':       'ContactPoint',
-        email:         'support@photogenerator.ai',
+        email:         'support@photogenerate.ai',
         contactType:   'customer support',
       },
     },
     // WebSite — enables Google sitelink search box
     {
       '@type':       'WebSite',
-      '@id':         'https://photogenerator.ai/#website',
-      url:           'https://photogenerator.ai',
-      name:          'PhotoGenerator.ai',
+      '@id':         'https://photogenerate.ai/#website',
+      url:           'https://photogenerate.ai',
+      name:          'PhotoGenerate AI',
       description:   'Free AI Image Enhancer and Photo Upscaler Online',
       potentialAction: {
         '@type':       'SearchAction',
-        target:        'https://photogenerator.ai/blog?q={search_term_string}',
+        target:        'https://photogenerate.ai/blog?q={search_term_string}',
         'query-input': 'required name=search_term_string',
       },
     },
   ],
 }
+
+// ── Homepage-specific schemas (SoftwareApplication + FAQPage) ─────────────────
+// Placed in layout so they render in <head> server-side with zero hydration risk.
+const homepageSchemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'PhotoGenerate AI',
+    url: 'https://www.photogenerate.ai',
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    description: 'Free AI photo enhancer. Upload any blurry, grainy, or low-resolution photo and get a sharp, HD result in seconds. No signup, no watermark, no software needed.',
+    featureList: [
+      'Enhance blurry photos with AI', 'Fix low resolution images',
+      'Remove grain and noise from photos', 'Restore old faded photos',
+      'Sharpen out-of-focus images', 'Enhance portrait photos',
+      'Improve product photo quality', 'Fix low-light and night photos',
+    ],
+    screenshot: 'https://www.photogenerate.ai/og-image.png',
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '2400', bestRating: '5', worstRating: '1' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      { '@type': 'Question', name: 'Is PhotoGenerate AI really free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Completely free — no credit card, no hidden fees, no watermark on your download.' } },
+      { '@type': 'Question', name: 'Are my photos stored on your servers?', acceptedAnswer: { '@type': 'Answer', text: 'No. Images are processed in memory and discarded instantly. We never store or retain any uploaded photos.' } },
+      { '@type': 'Question', name: 'Do I need an account to use PhotoGenerate AI?', acceptedAnswer: { '@type': 'Answer', text: 'No account or signup needed. Upload your photo, enhance it, and download the result.' } },
+      { '@type': 'Question', name: 'Will my enhanced photo have a watermark?', acceptedAnswer: { '@type': 'Answer', text: 'No. Enhanced photos download completely watermark-free.' } },
+      { '@type': 'Question', name: 'What image formats are supported?', acceptedAnswer: { '@type': 'Answer', text: 'JPG, JPEG, PNG, and WebP. For best results use JPG or PNG under 10MB.' } },
+      { '@type': 'Question', name: 'How long does enhancement take?', acceptedAnswer: { '@type': 'Answer', text: 'Typically 10 to 20 seconds depending on image size and complexity.' } },
+      { '@type': 'Question', name: 'What types of photos can it improve?', acceptedAnswer: { '@type': 'Answer', text: 'Blurry portraits, old faded photos, low-resolution product images, grainy night photos, out-of-focus shots, and pixelated images.' } },
+      { '@type': 'Question', name: 'Does PhotoGenerate AI work on mobile?', acceptedAnswer: { '@type': 'Answer', text: 'Yes — works in any modern mobile browser on iOS and Android. No app needed.' } },
+    ],
+  },
+]
 
 export default function RootLayout({
   children,
@@ -190,6 +227,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+
+        {/* Homepage-specific schemas (SoftwareApplication + FAQPage) */}
+        {homepageSchemas.map((schema, i) => (
+          <script
+            key={i}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
 
         {/* Google AdSense — afterInteractive keeps DOM stable for Auto Ads.
             Avoids CLS and ensures ad containers persist across state changes. */}
@@ -212,7 +258,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable"             content="yes" />
         <meta name="apple-mobile-web-app-capable"       content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title"         content="PhotoGenerator.ai" />
+        <meta name="apple-mobile-web-app-title"         content="PhotoGenerate AI" />
       </head>
       <body
         className="font-sans antialiased bg-background text-foreground"

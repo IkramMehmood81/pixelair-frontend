@@ -7,6 +7,8 @@ interface ComparisonSliderProps {
   afterImage: string
   beforeLabel?: string
   afterLabel?: string
+  beforeAlt?: string
+  afterAlt?: string
 }
 
 /**
@@ -26,6 +28,8 @@ export function ComparisonSlider({
   afterImage,
   beforeLabel = 'Before',
   afterLabel = 'After',
+  beforeAlt,
+  afterAlt,
 }: ComparisonSliderProps) {
   const [position, setPosition] = useState(50)
   const [isDragging, setIsDragging] = useState(false)
@@ -105,7 +109,7 @@ export function ComparisonSlider({
       {/* Before image — full width baseline */}
       <img
         src={beforeImage}
-        alt={beforeLabel}
+        alt={beforeAlt ?? beforeLabel}
         className="w-full h-auto block max-h-[420px] object-contain"
         draggable={false}
       />
@@ -117,7 +121,7 @@ export function ComparisonSlider({
       >
         <img
           src={afterImage}
-          alt={afterLabel}
+          alt={afterAlt ?? afterLabel}
           className="absolute inset-0 w-full h-full object-contain"
           style={{ minWidth: containerRef.current?.offsetWidth ?? '100%' }}
           draggable={false}
