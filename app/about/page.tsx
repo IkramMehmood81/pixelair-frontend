@@ -169,6 +169,37 @@ export default function AboutPage() {
                 <p className="text-xl font-bold text-primary mt-2">Just better photos, instantly.</p>
               </section>
 
+              {/* Built by real people */}
+              <section>
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
+                  Built by real people
+                </h2>
+                <p className="text-base text-muted-foreground leading-relaxed mb-6">
+                  PhotoGenerator.ai is an independent project built by a small team of developers
+                  and designers passionate about making professional-grade image tools available
+                  to everyone — not just those who can afford expensive software.
+                </p>
+                <div className="flex items-start gap-4 p-5 rounded-xl border border-border bg-card">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center flex-shrink-0 text-xl font-bold text-primary">
+                    PG
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">PhotoGenerator.ai Team</p>
+                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                      We are a team of web developers and AI enthusiasts who got tired of paying $20/month
+                      just to sharpen a single photo. We built the tool we always wanted — fast, private,
+                      and completely free. We are committed to keeping it that way.
+                    </p>
+                    <a
+                      href="mailto:support@photogenerator.ai"
+                      className="text-sm text-primary hover:underline mt-2 inline-block"
+                    >
+                      support@photogenerator.ai
+                    </a>
+                  </div>
+                </div>
+              </section>
+
             </div>
           </div>
         </GradientSection>
