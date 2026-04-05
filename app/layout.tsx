@@ -113,6 +113,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="dark">
       <head>
+        <meta name="google-site-verification" content="jQC2z7fcWhNoU-_Bj7NlhIcjYTREyoVsChhFQo0H-xQ" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }} />
         {/* Google Analytics 4 — only loads if GA_ID is set in .env.local */}
@@ -122,12 +123,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
               strategy="afterInteractive"
             />
-            <Script>
+            <Script id="ga4-init" strategy="afterInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${GA_ID}');
+                gtag('config', '${GA_ID}', { page_path: window.location.pathname });
               `}
             </Script>
           </>
