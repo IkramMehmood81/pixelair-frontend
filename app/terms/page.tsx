@@ -10,7 +10,7 @@ export default function TermsPage() {
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
         <article className="prose prose-sm max-w-none">
           <h1 className="text-4xl font-bold text-foreground mb-2">Terms of Use</h1>
-          <p className="text-muted-foreground mb-8">Last updated: March 2024</p>
+          <p className="text-muted-foreground mb-8">Last updated: April 2025</p>
 
           <section className="space-y-6 text-foreground">
             <div>
@@ -119,7 +119,7 @@ export default function TermsPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">13. Governing Law</h2>
               <p className="text-muted-foreground leading-relaxed">
-                These terms and conditions are governed by and construed in accordance with applicable laws, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.
+                These terms and conditions are governed by and construed in accordance with the laws of England and Wales. You irrevocably submit to the exclusive jurisdiction of the courts of England and Wales for any dispute arising from these terms.
               </p>
             </div>
 
@@ -133,7 +133,7 @@ export default function TermsPage() {
             <div className="bg-accent/5 border border-accent/20 rounded-lg p-6 mt-8">
               <h3 className="font-semibold text-foreground mb-2">Last Revision</h3>
               <p className="text-sm text-muted-foreground">
-                These Terms of Use were last revised on March 2024. We reserve the right to update these terms at any time.
+                These Terms of Use were last revised on April 2025. We reserve the right to update these terms at any time.
               </p>
             </div>
           </section>

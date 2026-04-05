@@ -87,6 +87,15 @@ export function Footer() {
               <a href="mailto:support@photogenerator.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
                 Privacy Concerns
               </a>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('cookie_consent')
+                  window.location.reload()
+                }}
+                className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light text-left cursor-pointer"
+              >
+                Manage Cookies
+              </button>
             </nav>
           </div>
         </div>
@@ -97,6 +106,18 @@ export function Footer() {
           <p className="tracking-tight font-light">&copy; {currentYear} PhotoGenerator.ai. All rights reserved.</p>
           <p className="tracking-tight font-light">Designed for creators. Built with precision.</p>
         </div>
+        {/* Required Google AdSense disclosure — Publisher Policy: Privacy Disclosures */}
+        <p className="text-center text-xs text-muted-foreground/60 mt-4">
+          This site uses Google AdSense. Google may use cookies to serve ads based on your visits to this and other sites.{' '}
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-muted-foreground transition-colors"
+          >
+            Learn how Google uses data
+          </a>.
+        </p>
       </div>
     </footer>
   )

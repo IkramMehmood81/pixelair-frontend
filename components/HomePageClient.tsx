@@ -468,9 +468,9 @@ function HomePageInner() {
 
                   {/* Stat cards — 4-col always, clamp handles visual sizing */}
                   <div className="hero-stat-grid">
-                    <StatCard value="500K+" label="Enhanced" highlight />
-                    <StatCard value="100%"  label="Free" />
-                    <StatCard value="2s"    label="Average" />
+                    <StatCard value="1K+" label="Enhanced" highlight />
+                    <StatCard value="100%" label="Free" />
+                    <StatCard value="~15s" label="Average" />
                     <StatCard value="∞"     label="No Limits" />
                   </div>
                 </div>
@@ -1000,7 +1000,7 @@ function HomePageInner() {
                     className="font-bold text-foreground tracking-tight"
                     style={{ fontSize: 'clamp(1.6rem, 4vw, 3rem)' }}
                   >
-                    500,000+ Photos Enhanced — and Counting
+                    1,000+ Photos Enhanced — and Counting
                   </h2>
                   <p
                     className="text-muted-foreground font-light max-w-2xl mx-auto mt-3"
@@ -1014,6 +1014,9 @@ function HomePageInner() {
                   <TestimonialCard quote="I restore old photos for clients and this free AI image enhancer gives results that rival paid tools. No watermarks, no sign-up — unbeatable."      author="Marcus Rodriguez" role="Photo Restorer"    rating={5} />
                   <TestimonialCard quote="Needed to fix a blurry product photo at 11pm before a deadline. This tool sharpened it in seconds. Free, private, and it just works."             author="Emma Williams"    role="E-commerce Owner" rating={5} />
                 </div>
+                <p className="text-xs text-muted-foreground text-center mt-6 opacity-70">
+                  * Testimonials are illustrative of typical user experiences.
+                </p>
               </div>
             </GradientSection>
 
@@ -1036,7 +1039,7 @@ function HomePageInner() {
 
             <CTASection
               title="Fix Blurry Photos in Seconds — Free"
-              description="Join 500,000+ users who sharpen, restore, and upscale images with our free AI image enhancer. No sign-up, no watermarks, no limits."
+              description="Join 1,000+ users who sharpen, restore, and upscale images with our free AI image enhancer. No sign-up, no watermarks, no limits."
               primaryCTA={{ text: 'Enhance My Image Free →', href: '#upload-idle' }}
               secondaryCTA={{ text: 'How It Works', href: '#how-it-works' }}
             />
