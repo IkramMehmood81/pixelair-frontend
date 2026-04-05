@@ -17,7 +17,7 @@ async function getBlogSlugs(): Promise<string[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://photogenerator.ai'
+  const baseUrl = 'https://www.photogenerate.ai' // ✅ corrected domain
   const blogSlugs = await getBlogSlugs()
 
   const staticRoutes: MetadataRoute.Sitemap = [

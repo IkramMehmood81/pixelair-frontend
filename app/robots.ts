@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/_next/'],
       },
     ],
-    sitemap: 'https://photogenerator.ai/sitemap.xml',
-    host: 'https://photogenerator.ai',
+    sitemap: 'https://www.photogenerate.ai/sitemap.xml', // ✅ correct domain
+    host: 'https://www.photogenerate.ai',                // ✅ correct domain
   }
 }
