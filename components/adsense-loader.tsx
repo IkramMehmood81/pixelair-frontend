@@ -56,7 +56,12 @@ function injectAutoAds(publisherId: string, personalised: boolean) {
 
 export default function AdSenseLoader({ publisherId }: Props) {
   useEffect(() => {
-    const stored = localStorage.getItem('cookie_consent')
+    // Read consent from correct storage:
+    // accepted → localStorage (permanent)
+    // declined → sessionStorage (session only, shows banner again next visit)
+    const permanent = localStorage.getItem('cookie_consent')
+    const session   = sessionStorage.getItem('cookie_consent_session')
+    const stored    = permanent === 'accepted' ? 'accepted' : session === 'declined' ? 'declined' : null
     const personalised = stored === 'accepted'
     injectAutoAds(publisherId, personalised)
 

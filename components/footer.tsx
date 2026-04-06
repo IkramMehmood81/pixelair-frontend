@@ -89,7 +89,9 @@ export function Footer() {
               </a>
               <button
                 onClick={() => {
+                  // Only clear the permanent acceptance — forces banner to show again
                   localStorage.removeItem('cookie_consent')
+                  sessionStorage.removeItem('cookie_consent_session')
                   window.location.reload()
                 }}
                 className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light text-left cursor-pointer"
