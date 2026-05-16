@@ -31,11 +31,11 @@ export function Footer() {
               Professional AI image enhancement. Free forever. Privacy first. Built for creators.
             </p>
             <a
-              href="mailto:support@photogenerator.ai"
+              href="mailto:support@photogenerate.ai"
               className="text-xs xs:text-sm text-primary hover:underline font-medium transition-colors"
               aria-label="Email support"
             >
-              support@photogenerator.ai
+              support@photogenerate.ai
             </a>
           </div>
 
@@ -78,13 +78,13 @@ export function Footer() {
           <div className="flex flex-col gap-5 xs:gap-6">
             <h4 className="text-xs xs:text-sm font-bold text-foreground tracking-widest uppercase">Support</h4>
             <nav className="flex flex-col gap-3" aria-label="Support links">
-              <a href="mailto:support@photogenerator.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
+              <a href="mailto:support@photogenerate.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
                 General Support
               </a>
-              <a href="mailto:support@photogenerator.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
+              <a href="mailto:support@photogenerate.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
                 Bug Reports
               </a>
-              <a href="mailto:support@photogenerator.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
+              <a href="mailto:support@photogenerate.ai" className="text-sm text-muted-foreground hover:text-primary hover:translate-x-1 transition-all duration-300 font-light">
                 Privacy Concerns
               </a>
               <button

@@ -101,8 +101,8 @@ export default function ContactPage() {
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Email Support</h3>
                 <p className="text-sm text-muted-foreground mb-3">Reach us directly for inquiries and support.</p>
-                <a href="mailto:support@photogenerator.ai" className="text-primary font-medium hover:underline text-sm">
-                  support@photogenerator.ai
+                <a href="mailto:support@photogenerate.ai" className="text-primary font-medium hover:underline text-sm">
+                  support@photogenerate.ai
                 </a>
               </div>
 
@@ -177,15 +177,15 @@ export default function ContactPage() {
                 )}
               </div>
 
-              <div className="mt-8 p-6 rounded-lg bg-primary/5 border border-primary/20">
+              {/* <div className="mt-8 p-6 rounded-lg bg-primary/5 border border-primary/20">
                 <h3 className="font-semibold text-foreground mb-3">Other Ways to Reach Us</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• <strong>Bug Reports:</strong> support@photogenerator.ai</li>
-                  <li>• <strong>Feature Requests:</strong> support@photogenerator.ai</li>
-                  <li>• <strong>Privacy Concerns:</strong> support@photogenerator.ai</li>
-                  <li>• <strong>Business Inquiries:</strong> support@photogenerator.ai</li>
+                  <li>• <strong>Bug Reports:</strong> support@photogenerate.ai</li>
+                  <li>• <strong>Feature Requests:</strong> support@photogenerate.ai</li>
+                  <li>• <strong>Privacy Concerns:</strong> support@photogenerate.ai</li>
+                  <li>• <strong>Business Inquiries:</strong> support@photogenerate.ai</li>
                 </ul>
-              </div>
+              </div> */}
             </div>
 
             <div id="faq" className="mt-16 scroll-mt-20">
