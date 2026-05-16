@@ -50,10 +50,10 @@ export async function generateMetadata({
   try {
     const blog = await fetchBlogBySlug(slug, 60);
     const title = blog.metaTitle || blog.title;
-    const description = blog.metaDescription || blog.excerpt || "Read this article on PhotoGenerator.ai";
+    const description = blog.metaDescription || blog.excerpt || "Read this article on PhotoGenerate.ai";
     const imageUrl = blog.featuredImage ?? undefined;
     return {
-      title: `${title} — PhotoGenerator.ai`,
+      title: `${title} — PhotoGenerate.ai`,
       description,
       openGraph: {
         title, description, type: "article",
@@ -61,12 +61,12 @@ export async function generateMetadata({
         modifiedTime: blog.updatedAt ?? undefined,
         authors: blog.author ? [blog.author] : undefined,
         images: imageUrl ? [{ url: imageUrl, alt: title }] : undefined,
-        siteName: "PhotoGenerator.ai",
+        siteName: "PhotoGenerate.ai",
       },
       twitter: { card: "summary_large_image", title, description, images: imageUrl ? [imageUrl] : undefined },
     };
   } catch {
-    return { title: "Blog Post — PhotoGenerator.ai", description: "Read the latest from PhotoGenerator.ai" };
+    return { title: "Blog Post — PhotoGenerate.ai", description: "Read the latest from PhotoGenerate.ai" };
   }
 }
 

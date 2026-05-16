@@ -80,13 +80,13 @@ export function Header() {
             <Link
               href="/"
               className="flex items-center gap-2 sm:gap-3 transition-all duration-300 flex-shrink-0"
-              aria-label="PhotoGenerator.ai — Home"
+              aria-label="PhotoGenerate.ai — Home"
             >
               <picture>
                 <source media="(min-width:1024px)" srcSet="/logo-large.png" />
                 <img
                   src="/logo-small.png"
-                  alt="PhotoGenerator.ai logo"
+                  alt="PhotoGenerate.ai logo"
                   className="h-8 sm:h-9 lg:h-14 w-auto object-contain"
                   style={{ imageRendering: 'auto' }}
                 />

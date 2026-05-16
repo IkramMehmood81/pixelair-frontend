@@ -31,11 +31,11 @@ export async function generateMetadata({
     const extracted = extractAuthorFromHtml(blog.content);
     const name = extracted.name || blog.author || "Author";
     return {
-      title: `${name} — PhotoGenerator.ai`,
-      description: extracted.bio || `Posts by ${name} on PhotoGenerator.ai`,
+      title: `${name} — PhotoGenerate.ai`,
+      description: extracted.bio || `Posts by ${name} on PhotoGenerate.ai`,
     };
   } catch {
-    return { title: "Author — PhotoGenerator.ai" };
+    return { title: "Author — PhotoGenerate.ai" };
   }
 }
 

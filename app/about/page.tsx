@@ -4,9 +4,9 @@ import { Footer } from '@/components/footer'
 import { GradientSection } from '@/components/gradient-section'
 
 export const metadata: Metadata = {
-  title: 'About Us — Free AI Image Enhancer | PhotoGenerator.ai',
+  title: 'About Us — Free AI Image Enhancer | PhotoGenerate.ai',
   description:
-    'Learn about PhotoGenerator.ai — a free AI image enhancer that sharpens blurry photos, restores old images, and upscales resolution online. No sign-up required.',
+    'Learn about PhotoGenerate.ai — a free AI image enhancer that sharpens blurry photos, restores old images, and upscales resolution online. No sign-up required.',
 }
 
 export default function AboutPage() {
@@ -21,10 +21,10 @@ export default function AboutPage() {
             {/* Hero heading */}
             <div className="mb-12 sm:mb-16">
               <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-6 leading-tight">
-                About PhotoGenerator.ai
+                About PhotoGenerate.ai
               </h1>
               <p className="text-lg sm:text-xl text-foreground/80 leading-relaxed">
-                We built PhotoGenerator.ai for one simple reason.
+                We built PhotoGenerate.ai for one simple reason.
               </p>
               <p className="text-lg sm:text-xl text-foreground/80 leading-relaxed mt-3">
                 Getting high-quality photos shouldn't be expensive, complicated, or locked behind
@@ -52,7 +52,7 @@ export default function AboutPage() {
                   poorly lit, or just missing that sharp, professional look. That's where we come in.
                 </p>
                 <p className="text-base text-muted-foreground leading-relaxed mt-3">
-                  PhotoGenerator.ai is built to take what you already have and make it better.
+                  PhotoGenerate.ai is built to take what you already have and make it better.
                   Sharper, clearer, more vibrant, and ready to use wherever you need it.
                 </p>
                 <p className="text-base text-muted-foreground leading-relaxed mt-3">
@@ -123,7 +123,7 @@ export default function AboutPage() {
                   Maybe it's a picture you want to post, send, or use for work.
                 </p>
                 <p className="text-base text-muted-foreground leading-relaxed mt-3">
-                  We built PhotoGenerator.ai for those moments.{' '}
+                  We built PhotoGenerate.ai for those moments.{' '}
                   <span className="text-foreground font-medium">Simple. Fast. No friction.</span>
                 </p>
               </section>
@@ -175,7 +175,7 @@ export default function AboutPage() {
                   Built by real people
                 </h2>
                 <p className="text-base text-muted-foreground leading-relaxed mb-6">
-                  PhotoGenerator.ai is an independent project built by a small team of developers
+                  PhotoGenerate.ai is an independent project built by a small team of developers
                   and designers passionate about making professional-grade image tools available
                   to everyone — not just those who can afford expensive software.
                 </p>
@@ -184,17 +184,17 @@ export default function AboutPage() {
                     PG
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">PhotoGenerator.ai Team</p>
+                    <p className="font-semibold text-foreground">PhotoGenerate.ai Team</p>
                     <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                       We are a team of web developers and AI enthusiasts who got tired of paying $20/month
                       just to sharpen a single photo. We built the tool we always wanted — fast, private,
                       and completely free. We are committed to keeping it that way.
                     </p>
                     <a
-                      href="mailto:support@photogenerator.ai"
+                      href="mailto:support@photogenerate.ai"
                       className="text-sm text-primary hover:underline mt-2 inline-block"
                     >
-                      support@photogenerator.ai
+                      support@photogenerate.ai
                     </a>
                   </div>
                 </div>

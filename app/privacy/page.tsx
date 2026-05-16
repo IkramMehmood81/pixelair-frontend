@@ -3,8 +3,8 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 
 export const metadata = {
-  title: 'Privacy Policy — PhotoGenerator.ai',
-  description: 'Read the PhotoGenerator.ai privacy policy covering data collection, cookies, advertising, and your rights.',
+  title: 'Privacy Policy — PhotoGenerate.ai',
+  description: 'Read the PhotoGenerate.ai privacy policy covering data collection, cookies, advertising, and your rights.',
 }
 
 export default function PrivacyPage() {
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">1. Introduction</h2>
               <p className="text-muted-foreground leading-relaxed">
-                PhotoGenerator.ai (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates the AI image enhancement
+                PhotoGenerate.ai (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates the AI image enhancement
                 service at photogenerator.ai. This Privacy Policy explains what data we collect,
                 how we use it, how we share it, and your rights regarding that data — including
                 data collected through advertising partners such as Google AdSense.
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Images You Upload</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    Images uploaded to PhotoGenerator.ai are sent to our AI enhancement service
+                    Images uploaded to PhotoGenerate.ai are sent to our AI enhancement service
                     for processing only. We do not store, log, or retain uploaded images after
                     processing is complete. All images are automatically deleted immediately
                     after your enhanced result is generated.
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
             <div id="advertising">
               <h2 className="text-2xl font-bold mb-4">4. Advertising — Google AdSense</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                PhotoGenerator.ai is funded by advertising. We use <strong>Google AdSense</strong> to
+                PhotoGenerate.ai is funded by advertising. We use <strong>Google AdSense</strong> to
                 display ads on this site. Google and its partners may use cookies, web beacons,
                 and similar technologies to:
               </p>
@@ -195,7 +195,7 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">9. Children&apos;s Privacy (COPPA)</h2>
               <p className="text-muted-foreground leading-relaxed">
-                PhotoGenerator.ai is not directed at children under the age of 13. We do not
+                PhotoGenerate.ai is not directed at children under the age of 13. We do not
                 knowingly collect personal information from children under 13. If you believe we
                 have inadvertently collected such information, please contact us immediately and
                 we will delete it promptly. Our advertising is tagged to indicate it is not
@@ -219,8 +219,8 @@ export default function PrivacyPage() {
               </ul>
               <p className="text-muted-foreground leading-relaxed mt-3">
                 To exercise any of these rights, contact us at{' '}
-                <Link href="mailto:privacy@photogenerator.ai" className="text-primary hover:underline">
-                  privacy@photogenerator.ai
+                <Link href="mailto:support@photogenerate.ai" className="text-primary hover:underline">
+                  support@photogenerate.ai
                 </Link>.
               </p>
             </div>
@@ -229,7 +229,7 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">11. GDPR &amp; International Privacy Laws</h2>
               <p className="text-muted-foreground leading-relaxed">
-                PhotoGenerator.ai complies with the EU General Data Protection Regulation (GDPR),
+                PhotoGenerate.ai complies with the EU General Data Protection Regulation (GDPR),
                 the UK GDPR, the California Consumer Privacy Act (CCPA), and other applicable
                 privacy laws. We do not sell your personal data to third parties. Our legal basis
                 for processing data for advertising purposes is your explicit consent, which you
@@ -243,7 +243,7 @@ export default function PrivacyPage() {
               <p className="text-muted-foreground leading-relaxed">
                 We may update this Privacy Policy from time to time. We will notify you of
                 material changes by updating the &ldquo;Last updated&rdquo; date at the top of this page.
-                Continued use of PhotoGenerator.ai after changes constitutes acceptance of the
+                Continued use of PhotoGenerate.ai after changes constitutes acceptance of the
                 updated policy.
               </p>
             </div>
@@ -254,8 +254,8 @@ export default function PrivacyPage() {
               <p className="text-muted-foreground leading-relaxed">
                 If you have questions about this Privacy Policy or our privacy practices, contact
                 us at{' '}
-                <Link href="mailto:privacy@photogenerator.ai" className="text-primary hover:underline">
-                  privacy@photogenerator.ai
+                <Link href="mailto:support@photogenerate.ai" className="text-primary hover:underline">
+                  support@photogenerate.ai
                 </Link>.
               </p>
             </div>

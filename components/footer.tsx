@@ -16,12 +16,12 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 xs:gap-8 sm:gap-10 lg:gap-12 mb-8 xs:mb-10 sm:mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1 flex flex-col gap-5 xs:gap-6">
-            <Link href="/" aria-label="PhotoGenerator.ai — Home">
+            <Link href="/" aria-label="PhotoGenerate.ai — Home">
               <picture>
                 <source media="(min-width:1024px)" srcSet="/logo-large.png" />
                 <img
                   src="/logo-small.png"
-                  alt="PhotoGenerator.ai logo"
+                  alt="PhotoGenerate.ai logo"
                   className="h-8 sm:h-9 lg:h-14 w-auto object-contain"
                   loading="lazy"
                 />
@@ -105,7 +105,7 @@ export function Footer() {
         <Separator className="my-12 bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-muted-foreground">
-          <p className="tracking-tight font-light">&copy; {currentYear} PhotoGenerator.ai. All rights reserved.</p>
+          <p className="tracking-tight font-light">&copy; {currentYear} PhotoGenerate.ai. All rights reserved.</p>
           <p className="tracking-tight font-light">Designed for creators. Built with precision.</p>
         </div>
         {/* Required Google AdSense disclosure — Publisher Policy: Privacy Disclosures */}

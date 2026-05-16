@@ -19,20 +19,20 @@ export const revalidate = 60;
 
 // ── Static SEO metadata ────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "Blog — PhotoGenerator.ai",
+  title: "Blog — PhotoGenerate.ai",
   description:
-    "Tips, tutorials, and insights on AI image enhancement, photography, and creative workflows from the PhotoGenerator.ai team.",
+    "Tips, tutorials, and insights on AI image enhancement, photography, and creative workflows from the PhotoGenerate.ai team.",
   openGraph: {
-    title: "Blog — PhotoGenerator.ai",
+    title: "Blog — PhotoGenerate.ai",
     description:
       "Tips, tutorials, and insights on AI image enhancement, photography, and creative workflows.",
     type: "website",
-    siteName: "PhotoGenerator.ai",
+    siteName: "PhotoGenerate.ai",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog — PhotoGenerator.ai",
-    description: "Tips and tutorials on AI image enhancement from PhotoGenerator.ai.",
+    title: "Blog — PhotoGenerate.ai",
+    description: "Tips and tutorials on AI image enhancement from PhotoGenerate.ai.",
   },
 };
 
@@ -166,7 +166,7 @@ export default async function BlogListPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-5">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-xs font-medium text-primary">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              PhotoGenerator.ai Blog
+              PhotoGenerate.ai Blog
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-tight">
               Tips, Tutorials &amp;{" "}
@@ -176,7 +176,7 @@ export default async function BlogListPage() {
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
               AI image enhancement guides, photography tips, and creative
-              workflow tutorials from the PhotoGenerator.ai team.
+              workflow tutorials from the PhotoGenerate.ai team.
             </p>
           </div>
         </section>
